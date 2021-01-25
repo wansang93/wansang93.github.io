@@ -10128,14 +10128,6 @@ h3 {
 .masthead .masthead-avatar {
   width: 15rem;
 }
-/* My function */
-.my-font {
-  font-size: 1.75rem;
-  padding-bottom: 1.3rem;
-}
-.my-photo {
-  width: 20rem;
-}
 
 @media (min-width: 992px) {
   .masthead {
@@ -10150,14 +10142,6 @@ h3 {
   }
   .masthead .masthead-subheading {
     font-size: 1.5rem;
-  }
-  /* My function */
-  .my-font {
-    font-size: 2rem;
-    padding-bottom: 1.5rem;
-  }
-  .my-photo {
-    width: 800px;
   }
 }
 .portfolio .portfolio-item {
@@ -10261,4 +10245,120 @@ form .row:first-child .floating-label-form-group {
 
 .copyright {
   background-color: #1a252f;
+}
+
+/* my-functions */
+
+.my-font {
+  font-size: 1.75rem;
+}
+.my-font-padding {
+  padding-bottom: 1.3rem;
+}
+
+.my-photo {
+  width: 15rem;
+}
+
+@media (min-width: 576px) {
+  .my-photo {
+    width: 400px;
+  }
+}
+@media (min-width: 680px) {
+  .my-photo {
+    width: 500px;
+  }
+}
+@media (min-width: 768px) {
+  .my-photo {
+    width: 600px;
+  }
+  .my-font {
+    font-size: 2rem;
+  }
+  .my-font-padding {
+    padding-bottom: 1.5rem;
+  }
+}
+@media (min-width: 992px) {
+  .my-photo {
+    width: 700px;
+  }
+}
+@media (min-width: 1200px) {
+  .my-photo {
+    width: 800px;
+  }
+}
+
+/* Slideshow container */
+.slideshow-container {
+    max-width: 860px;
+    position: relative;
+    margin: auto;
+}
+
+/* slide-Next & slide-previous buttons */
+.slide-prev,
+.slide-next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  padding: 16px;
+  margin-top: -22px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+}
+
+/* Position the "slide-next button" to the right */
+.slide-next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+.slide-prev {
+  left: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.slide-prev:hover,
+.slide-next:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Caption text */
+.text-slide {
+  color: #f2f2f2;
+  font-size: 15px;
+  padding: 8px 12px;
+  position: absolute;
+  bottom: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Number text (1/3 etc) */
+.numbertext {
+  color: #f2f2f2;
+  font-size: 12px;
+  padding: 8px 12px;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.1);
+  top: 0;
+}
+
+/* On smaller screens, decrease text size */
+@media only screen and (max-width: 300px) {
+
+  .slide-prev,
+  .slide-next,
+  .text-slide {
+      font-size: 11px
+  }
 }
