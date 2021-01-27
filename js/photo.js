@@ -1,10 +1,10 @@
-!(function(d){
+!(function (d) {
   // Variables to target our base class,  get carousel items, count how many carousel items there are, set the slide to 0 (which is the number that tells us the frame we're on), and set motion to true which disables interactivity.
   var itemClassName = "carousel__photo";
-      items = d.getElementsByClassName(itemClassName),
-      totalItems = items.length,
-      slide = 0,
-      moving = true; 
+  items = d.getElementsByClassName(itemClassName),
+    totalItems = items.length,
+    slide = 0,
+    moving = true;
 
   // To initialise the carousel we'll want to update the DOM with our own classes
   function setInitialClasses() {
@@ -20,7 +20,7 @@
 
   function setEventListeners() {
     var next = d.getElementsByClassName('carousel__button--next')[0],
-        prev = d.getElementsByClassName('carousel__button--prev')[0];
+      prev = d.getElementsByClassName('carousel__button--prev')[0];
 
     next.addEventListener('click', moveNext);
     prev.addEventListener('click', movePrev);
@@ -30,7 +30,7 @@
   function disableInteraction() {
     moving = true;
 
-    setTimeout(function(){
+    setTimeout(function () {
       moving = false
     }, 500);
   }
@@ -38,16 +38,16 @@
   function moveCarouselTo(slide) {
 
     // Check if carousel is moving, if not, allow interaction
-    if(!moving) {
+    if (!moving) {
 
       // temporarily disable interactivity
       disableInteraction();
 
       // Preemptively set variables for the current next and previous slide, as well as the potential next or previous slide.
       var newPrevious = slide - 1,
-          newNext = slide + 1,
-          oldPrevious = slide - 2,
-          oldNext = slide + 2;
+        newNext = slide + 1,
+        oldPrevious = slide - 2,
+        oldNext = slide + 2;
 
       // Test if carousel has more than three items
       if ((totalItems - 1) > 3) {
@@ -55,7 +55,7 @@
         // Checks if the new potential slide is out of bounds and sets slide numbers
         if (newPrevious <= 0) {
           oldPrevious = (totalItems - 1);
-        } else if (newNext >= (totalItems - 1)){
+        } else if (newNext >= (totalItems - 1)) {
           oldNext = 0;
         }
 
@@ -64,7 +64,7 @@
           newPrevious = (totalItems - 1);
           oldPrevious = (totalItems - 2);
           oldNext = (slide + 1);
-        } else if (slide === (totalItems -1)) {
+        } else if (slide === (totalItems - 1)) {
           newPrevious = (slide - 1);
           newNext = 0;
           oldNext = 1;
