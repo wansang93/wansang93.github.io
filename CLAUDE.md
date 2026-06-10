@@ -55,6 +55,11 @@ public/project/webpage/2021/site/   # 2021 정적 아카이브 (수정 금지)
 ### Nav 드롭다운
 - `src/components/nav.tsx`의 `DropdownMenu`는 Project 메뉴용. 새 Project 카테고리 추가하면 `projectMenu.groups`에도 항목 추가해야 보임.
 
+### 검색 (Ctrl/Cmd+K)
+- 헤더 우측 돋보기 버튼 또는 Ctrl/Cmd+K로 검색 모달 열림. 라우트별 페이지 인덱스에서 substring 매칭.
+- 검색 인덱스는 [src/lib/search.ts](src/lib/search.ts)의 `SEARCH_ITEMS` 배열에 정의. href는 한국어 경로(절대), 클릭 시 현재 lang에 맞춰 `/en/`이 자동 prefix됨.
+- **새 페이지를 추가할 때마다 SEARCH_ITEMS에도 항목 추가** — 안 그러면 검색에서 안 보임. KO/EN title 둘 다, 가능하면 description도.
+
 ### 미션 시스템 (이스터에그)
 - 사이트에 숨겨진 미션. 진입로는 **Footer 링크만**이라 일반 사용자에겐 잘 안 보임.
 - 미션 정의는 [src/lib/missions.ts](src/lib/missions.ts)의 `MISSIONS` 배열에 추가. `id` 타입(`MissionId`)도 함께 확장.

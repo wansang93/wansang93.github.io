@@ -7,16 +7,24 @@ const TOLERANCE = 4;
 
 export function ScrollEndMission() {
   useEffect(() => {
-    function onScroll() {
+    function atBottom() {
       const doc = document.documentElement;
-      if (window.innerHeight + window.scrollY >= doc.scrollHeight - TOLERANCE) {
-        if (completeMission('scroll-to-bottom')) {
-          window.removeEventListener('scroll', onScroll);
-        }
-      }
+      const max = doc.scrollHeight - window.innerHeight;
+      if (max <= 0) return true;
+      return window.scrollY + window.innerHeight >= doc.scrollHeight - TOLERANCE;
     }
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    function check() {
+      if (atBottom()) completeMission('scroll-to-bottom');
+    }
+    check();
+    window.addEventListener('scroll', check, { passive: true });
+    window.addEventListener('resize', check);
+    window.addEventListener('missions:change', check);
+    return () => {
+      window.removeEventListener('scroll', check);
+      window.removeEventListener('resize', check);
+      window.removeEventListener('missions:change', check);
+    };
   }, []);
   return null;
 }

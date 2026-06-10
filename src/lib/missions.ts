@@ -15,17 +15,17 @@ export type Mission = {
   title: { ko: string; en: string };
   hint: { ko: string; en: string };
   hidden?: boolean;
+  persistent?: boolean;
 };
 
 export const MISSIONS: Mission[] = [
   {
-    id: 'discover-f12',
-    title: { ko: '숨겨진 단축키 찾기', en: 'Find the hidden shortcut' },
+    id: 'find-mission-page',
+    title: { ko: '미션 페이지 도달', en: 'Reach the mission page' },
     hint: {
-      ko: '개발자 도구를 여는 그 키를 눌러보세요. 모바일이라면 상단 로고를 길게 눌러 보세요.',
-      en: 'Try the key that opens developer tools. On mobile, long-press the logo at the top.',
+      ko: '이 페이지에 7초 이상 머무르면 자동으로 달성돼요.',
+      en: 'Stay on this page for at least 7 seconds and it unlocks automatically.',
     },
-    hidden: true,
   },
   {
     id: 'toggle-dark-mode',
@@ -60,16 +60,21 @@ export const MISSIONS: Mission[] = [
     },
   },
   {
-    id: 'find-mission-page',
-    title: { ko: '미션 페이지 도달', en: 'Reach the mission page' },
+    id: 'discover-f12',
+    title: { ko: '숨겨진 단축키 찾기', en: 'Find the hidden shortcut' },
     hint: {
-      ko: '이 페이지에 도착했다면 자동 완료!',
-      en: 'Auto-completed once you got here.',
+      ko: '개발자 도구를 여는 그 키를 눌러보세요. 모바일이라면 상단 로고를 길게 눌러 보세요.',
+      en: 'Try the key that opens developer tools. On mobile, long-press the logo at the top.',
     },
+    hidden: true,
   },
 ];
 
 const STORAGE_KEY = 'missions:v1';
+
+export function getMissionState(): Record<string, boolean> {
+  return readStore();
+}
 
 function readStore(): Record<string, boolean> {
   if (typeof window === 'undefined') return {};
@@ -88,13 +93,28 @@ function writeStore(state: Record<string, boolean>) {
   window.dispatchEvent(new CustomEvent('missions:change'));
 }
 
+export function resetMission(id: MissionId) {
+  if (typeof window === 'undefined') return false;
+  const state = readStore();
+  if (!state[id]) return false;
+  delete state[id];
+  writeStore(state);
+  return true;
+}
+
 export function completeMission(id: MissionId) {
   if (typeof window === 'undefined') return false;
   const state = readStore();
   if (state[id]) return false;
   state[id] = true;
   writeStore(state);
-  window.dispatchEvent(new CustomEvent('missions:unlocked', { detail: { id } }));
+  const completedHidden = MISSIONS.filter((m) => m.hidden && state[m.id]).length;
+  const totalHidden = MISSIONS.filter((m) => m.hidden).length;
+  window.dispatchEvent(
+    new CustomEvent('missions:unlocked', {
+      detail: { id, completedHidden, totalHidden },
+    })
+  );
   return true;
 }
 
@@ -126,3 +146,4 @@ export function useMissions() {
 
   return { state, toggle, reset };
 }
+

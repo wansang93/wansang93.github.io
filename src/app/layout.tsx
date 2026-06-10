@@ -4,6 +4,8 @@ import { Nav } from '@/components/nav';
 import { Footer } from '@/components/footer';
 import { MissionTracker } from '@/components/mission-tracker';
 import { ScrollEndMission } from '@/components/scroll-end-mission';
+import { ScrollProgress } from '@/components/scroll-progress';
+import { Fireworks } from '@/components/fireworks';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
@@ -41,10 +43,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body className="min-h-screen font-sans">
+        <ScrollProgress />
         <Nav />
         <main className="mx-auto max-w-3xl px-6 pt-24 pb-16">{children}</main>
         <Footer />
         <MissionTracker />
+        <Fireworks />
         <ScrollEndMission />
       </body>
     </html>

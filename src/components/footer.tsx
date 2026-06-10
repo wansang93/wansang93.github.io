@@ -5,8 +5,8 @@ import { usePathname } from 'next/navigation';
 import { detectLang, prefixed } from '@/lib/i18n';
 
 const dict = {
-  ko: { github: '깃허브', email: '이메일', mission: '미션' },
-  en: { github: 'GitHub', email: 'Email', mission: 'Mission' },
+  ko: { github: '깃허브', email: '이메일', mission: '미션', patchNotes: '패치노트' },
+  en: { github: 'GitHub', email: 'Email', mission: 'Mission', patchNotes: 'Patch notes' },
 } as const;
 
 export function Footer() {
@@ -27,6 +27,9 @@ export function Footer() {
           </a>
           <Link href={prefixed('/mission/', lang)} className="hover:text-fg">
             {t.mission}
+          </Link>
+          <Link href={prefixed('/patch-notes/', lang)} className="hover:text-fg">
+            {t.patchNotes}
           </Link>
         </div>
       </div>

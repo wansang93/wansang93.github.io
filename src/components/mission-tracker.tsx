@@ -3,45 +3,77 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
-import { completeMission } from '@/lib/missions';
-import { detectLang, prefixed } from '@/lib/i18n';
+import { MISSIONS, completeMission, getMissionState } from '@/lib/missions';
+import { detectLang, prefixed, type Lang } from '@/lib/i18n';
+
+type Mode = 'intro' | 'hidden';
 
 const dict = {
   ko: {
-    badge: '히든 미션 발견',
-    headline: '히든 미션을 달성했습니다!',
-    body: '이 사이트에 숨겨진 미션을 찾아냈어요. 미션 페이지에서 다른 미션도 확인해 보세요.',
+    introBadge: '🎉 첫 미션 달성!',
+    introHeadline: '미션을 발견했어요!',
+    introBody: '사이트 곳곳에 숨겨진 미션이 있어요. 히든 미션도 함께 찾아보세요.',
+    hiddenBadge: '히든 미션 발견',
+    hiddenHeadline: (ord: string) => `${ord} 히든 미션을 달성했습니다.`,
+    hiddenProgress: (c: number, t: number) => `완료 현황 (${c}/${t})`,
+    hiddenBody: '미션 페이지에서 다른 미션도 확인해 보세요.',
     go: '미션 페이지로 →',
     close: '닫기',
   },
   en: {
-    badge: 'Hidden mission found',
-    headline: 'You unlocked a hidden mission!',
-    body: 'You discovered something secret. See your progress and other missions on the mission page.',
+    introBadge: '🎉 First mission!',
+    introHeadline: 'You found a mission!',
+    introBody: 'Missions are hidden around the site. Find the secret ones too.',
+    hiddenBadge: 'Hidden mission found',
+    hiddenHeadline: (ord: string) => `You unlocked your ${ord} hidden mission!`,
+    hiddenProgress: (c: number, t: number) => `Progress (${c}/${t})`,
+    hiddenBody: 'See your progress and other missions on the mission page.',
     go: 'Go to missions →',
     close: 'Close',
   },
 } as const;
 
+const KOREAN_ORDINALS = ['첫', '두', '세', '네', '다섯', '여섯', '일곱', '여덟', '아홉', '열'];
+
+function ordinal(n: number, lang: Lang): string {
+  if (n < 1) return lang === 'ko' ? '히든' : 'first';
+  if (lang === 'ko') {
+    return n <= KOREAN_ORDINALS.length ? `${KOREAN_ORDINALS[n - 1]}번째` : `${n}번째`;
+  }
+  const v = n % 100;
+  const s = ['th', 'st', 'nd', 'rd'];
+  return `${n}${s[(v - 20) % 10] || s[v] || s[0]}`;
+}
+
 export function MissionTracker() {
   const pathname = usePathname() || '/';
   const lang = detectLang(pathname);
   const t = dict[lang];
-  const [open, setOpen] = useState(false);
+  const [mode, setMode] = useState<Mode | null>(null);
+  const [progress, setProgress] = useState({ completed: 0, total: 0 });
 
-  const close = useCallback(() => setOpen(false), []);
+  const close = useCallback(() => setMode(null), []);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === 'F12') {
         completeMission('discover-f12');
       } else if (e.key === 'Escape') {
-        setOpen(false);
+        setMode(null);
       }
     }
     function onUnlocked(e: Event) {
-      const detail = (e as CustomEvent<{ id: string }>).detail;
-      if (detail?.id === 'discover-f12') setOpen(true);
+      const detail = (e as CustomEvent<{ id: string; completedHidden: number; totalHidden: number }>).detail;
+      const state = getMissionState();
+      const done = MISSIONS.filter((m) => state[m.id]).length;
+      if (done === 1) {
+        setMode('intro');
+        return;
+      }
+      if (detail?.id === 'discover-f12') {
+        setProgress({ completed: detail.completedHidden, total: detail.totalHidden });
+        setMode('hidden');
+      }
     }
     window.addEventListener('keydown', onKey);
     window.addEventListener('missions:unlocked', onUnlocked);
@@ -51,25 +83,36 @@ export function MissionTracker() {
     };
   }, []);
 
-  if (!open) return null;
+  if (!mode) return null;
+
+  const isIntro = mode === 'intro';
 
   return (
     <div
       role="dialog"
       aria-modal="true"
       aria-labelledby="mission-modal-title"
-      className="fixed inset-0 z-[60] grid place-items-center bg-black/50 backdrop-blur-sm px-6"
+      className="fixed inset-0 z-[70] grid place-items-center bg-black/50 backdrop-blur-sm px-6"
       onClick={close}
     >
       <div
         className="w-full max-w-md rounded-2xl border border-border bg-bg p-6 shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <p className="text-xs uppercase tracking-widest text-accent">{t.badge}</p>
+        <p className="text-xs uppercase tracking-widest text-accent">
+          {isIntro ? t.introBadge : t.hiddenBadge}
+        </p>
         <h2 id="mission-modal-title" className="mt-2 font-serif text-2xl font-semibold leading-snug">
-          {t.headline}
+          {isIntro ? t.introHeadline : t.hiddenHeadline(ordinal(progress.completed, lang))}
         </h2>
-        <p className="mt-3 text-sm text-muted leading-relaxed">{t.body}</p>
+        {!isIntro && (
+          <p className="mt-2 font-mono text-xs text-muted">
+            {t.hiddenProgress(progress.completed, progress.total)}
+          </p>
+        )}
+        <p className="mt-3 text-sm text-muted leading-relaxed">
+          {isIntro ? t.introBody : t.hiddenBody}
+        </p>
         <div className="mt-6 flex items-center justify-end gap-2">
           <button
             type="button"

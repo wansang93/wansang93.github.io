@@ -7,6 +7,7 @@ import { detectLang, prefixed, type Lang } from '@/lib/i18n';
 import { completeMission } from '@/lib/missions';
 import { ThemeToggle } from './theme-toggle';
 import { LanguageToggle } from './language-toggle';
+import { Search } from './search';
 
 type NavLabels = {
   home: string;
@@ -159,13 +160,16 @@ export function Nav() {
               {links[2].label}
             </Link>
           </li>
-          <li className="ml-1 flex items-center gap-1">
+          <li aria-hidden className="mx-2 h-5 w-px bg-border" />
+          <li className="flex items-center gap-1">
+            <Search />
             <ThemeToggle />
             <LanguageToggle />
           </li>
         </ul>
 
         <div className="sm:hidden flex items-center gap-1">
+          <Search />
           <ThemeToggle />
           <LanguageToggle />
           <button
