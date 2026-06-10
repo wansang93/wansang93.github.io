@@ -81,6 +81,10 @@ export function Nav() {
   }, [pathname]);
 
   useEffect(() => {
+    if (mobileOpen) completeMission('open-project-menu');
+  }, [mobileOpen]);
+
+  useEffect(() => {
     if (!mobileOpen) return;
     const original = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -204,7 +208,6 @@ export function Nav() {
             <li>
               <Link
                 href={projectMenu.href}
-                onClick={() => completeMission('open-project-menu')}
                 className="block px-3 py-3 rounded-md hover:bg-border/40 transition-colors"
               >
                 {projectMenu.label}

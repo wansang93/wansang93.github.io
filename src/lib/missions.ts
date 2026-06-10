@@ -7,7 +7,7 @@ export type MissionId =
   | 'toggle-dark-mode'
   | 'toggle-language'
   | 'open-project-menu'
-  | 'visit-2021-archive'
+  | 'scroll-to-bottom'
   | 'find-mission-page';
 
 export type Mission = {
@@ -52,11 +52,11 @@ export const MISSIONS: Mission[] = [
     },
   },
   {
-    id: 'visit-2021-archive',
-    title: { ko: '2021 아카이브 둘러보기', en: 'Visit the 2021 archive' },
+    id: 'scroll-to-bottom',
+    title: { ko: '스크롤 끝까지 내리기', en: 'Scroll to the bottom' },
     hint: {
-      ko: '옛 사이트가 어떻게 생겼는지 보러 가보세요.',
-      en: 'See what the old site used to look like.',
+      ko: '어떤 페이지든 끝까지 내려가 보세요.',
+      en: 'Scroll any page all the way to the bottom.',
     },
   },
   {
