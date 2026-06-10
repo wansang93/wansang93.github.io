@@ -17,11 +17,11 @@ export default function WebpageIndex() {
       <header>
         <p className="text-sm text-muted">
           <Link href="/project/" className="hover:text-fg">
-            Project
+            프로젝트
           </Link>{' '}
-          / Webpage
+          / 웹페이지
         </p>
-        <h1 className="mt-2 font-serif text-4xl font-semibold tracking-tight">Webpage</h1>
+        <h1 className="mt-2 font-serif text-4xl font-semibold tracking-tight">웹페이지</h1>
         <p className="mt-3 text-muted">매년 리빌드한 개인 웹페이지 버전 아카이브.</p>
       </header>
 

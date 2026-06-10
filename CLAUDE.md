@@ -30,6 +30,16 @@ public/project/webpage/2021/site/   # 2021 정적 아카이브 (수정 금지)
 - 라우트 안의 내부 링크는 `prefixed(href, lang)` 사용해서 현재 언어 유지.
 - 언어 감지는 `detectLang(pathname)` — `/en` 또는 `/en/`로 시작하면 en, 아니면 ko.
 
+### 반응형 (모든 작업에 필수)
+- **모든 페이지·컴포넌트는 모바일 / 태블릿 / 데스크탑에서 깨지지 않아야 한다.** 새 UI를 만들거나 수정할 때 항상 적용.
+- 기본 컨테이너 폭: `max-w-3xl px-6 mx-auto`. 페이지 콘텐츠는 이 안에 들어가도록.
+- Tailwind 브레이크포인트: `sm` 640, `md` 768, `lg` 1024. 모바일-퍼스트(베이스가 모바일, `sm:`/`md:`로 확장).
+- Nav는 `< sm`에서 햄버거 메뉴, `sm+`에서 가로 메뉴 (src/components/nav.tsx 참고). 새 메뉴 항목을 추가하면 **데스크탑 ul + 모바일 panel 둘 다** 업데이트.
+- 큰 디스플레이 텍스트(`text-5xl` 이상)는 모바일에선 한 단계 줄이기: 예 `text-4xl sm:text-5xl`.
+- 가로로 늘어선 항목은 `flex-wrap` 또는 `flex-col sm:flex-row` 패턴으로 자연 줄바꿈.
+- 절대 위치 드롭다운/모달은 가로폭이 화면을 넘지 않도록 `max-w-` 또는 `right-0`로 제한.
+- 검증: dev 띄운 뒤 브라우저 DevTools의 device toolbar로 최소 **iPhone(약 390px), iPad(약 768px), 데스크탑** 세 폭에서 확인.
+
 ### 다크모드
 - `:root` / `.dark` 에 CSS variables 정의 (`--color-bg`, `--color-fg`, `--color-muted`, `--color-accent`, `--color-border`). globals.css 참고.
 - Tailwind `darkMode: 'class'` 설정. 클래스는 `<html>`에 붙는다.
@@ -44,6 +54,19 @@ public/project/webpage/2021/site/   # 2021 정적 아카이브 (수정 금지)
 
 ### Nav 드롭다운
 - `src/components/nav.tsx`의 `DropdownMenu`는 Project 메뉴용. 새 Project 카테고리 추가하면 `projectMenu.groups`에도 항목 추가해야 보임.
+
+### 미션 시스템 (이스터에그)
+- 사이트에 숨겨진 미션. 진입로는 **Footer 링크만**이라 일반 사용자에겐 잘 안 보임.
+- 미션 정의는 [src/lib/missions.ts](src/lib/missions.ts)의 `MISSIONS` 배열에 추가. `id` 타입(`MissionId`)도 함께 확장.
+- 진행 상태는 `localStorage['missions:v1']`에 저장. SSR 안전.
+- 완료 처리는 두 가지 경로:
+  - 이벤트 hook (예: F12 keydown) → `completeMission('id')` 호출. `MissionTracker`가 모달도 띄움.
+  - UI 토글 (예: 미션 페이지에서 직접 체크) → `useMissions().toggle('id')`.
+- 새 미션 추가 시 체크리스트:
+  - `MissionId` 유니온에 추가
+  - `MISSIONS`에 KO/EN 타이틀·힌트 작성
+  - 완료 트리거를 어디서 부를지 결정 (이벤트 / 페이지 방문 / 수동)
+  - 필요하면 [src/components/mission-tracker.tsx](src/components/mission-tracker.tsx)에 모달 트리거 추가
 
 ## 빌드 & 검증
 

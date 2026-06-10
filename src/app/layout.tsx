@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter, Fraunces, JetBrains_Mono } from 'next/font/google';
 import { Nav } from '@/components/nav';
 import { Footer } from '@/components/footer';
+import { MissionTracker } from '@/components/mission-tracker';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Nav />
         <main className="mx-auto max-w-3xl px-6 pt-24 pb-16">{children}</main>
         <Footer />
+        <MissionTracker />
       </body>
     </html>
   );

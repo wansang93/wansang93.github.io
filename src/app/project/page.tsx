@@ -14,7 +14,7 @@ export default function ProjectIndex() {
   return (
     <div className="space-y-10">
       <header>
-        <h1 className="font-serif text-4xl font-semibold tracking-tight">Project</h1>
+        <h1 className="font-serif text-4xl font-semibold tracking-tight">프로젝트</h1>
         <p className="mt-3 text-muted">카테고리별로 정리된 프로젝트 아카이브입니다.</p>
       </header>
 

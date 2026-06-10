@@ -1,5 +1,7 @@
 'use client';
 
+import { completeMission } from '@/lib/missions';
+
 export function ThemeToggle() {
   function toggle() {
     const next = !document.documentElement.classList.contains('dark');
@@ -7,6 +9,7 @@ export function ThemeToggle() {
     try {
       localStorage.setItem('theme', next ? 'dark' : 'light');
     } catch {}
+    completeMission('toggle-dark-mode');
   }
 
   return (

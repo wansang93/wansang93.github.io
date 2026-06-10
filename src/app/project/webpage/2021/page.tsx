@@ -1,23 +1,25 @@
 import Link from 'next/link';
+import { MissionPing } from '@/components/mission-ping';
 
 export const metadata = { title: 'Webpage 2021' };
 
 export default function Webpage2021() {
   return (
     <article className="space-y-10">
+      <MissionPing id="visit-2021-archive" />
       <header>
         <p className="text-sm text-muted">
           <Link href="/project/" className="hover:text-fg">
-            Project
+            프로젝트
           </Link>{' '}
           /{' '}
           <Link href="/project/webpage/" className="hover:text-fg">
-            Webpage
+            웹페이지
           </Link>{' '}
           / 2021
         </p>
         <h1 className="mt-2 font-serif text-4xl font-semibold tracking-tight">
-          Webpage 2021
+          웹페이지 2021
         </h1>
         <p className="mt-2 text-sm text-muted">
           첫 번째 개인 웹페이지 · 2021년 1월 작성

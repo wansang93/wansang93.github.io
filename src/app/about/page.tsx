@@ -5,7 +5,7 @@ export const metadata = { title: 'About' };
 export default function AboutPage() {
   return (
     <div className="space-y-6">
-      <h1 className="font-serif text-4xl font-semibold tracking-tight">About</h1>
+      <h1 className="font-serif text-4xl font-semibold tracking-tight">소개</h1>
       <p className="text-muted leading-relaxed">
         김완상. 소프트웨어 엔지니어. 클라우드·머신러닝·자동화에 관심이 많습니다.
       </p>

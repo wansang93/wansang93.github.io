@@ -5,8 +5,8 @@ import { usePathname } from 'next/navigation';
 import { detectLang, prefixed } from '@/lib/i18n';
 
 const dict = {
-  ko: { archive: '2021 아카이브' },
-  en: { archive: '2021 archive' },
+  ko: { github: '깃허브', email: '이메일', mission: '미션' },
+  en: { github: 'GitHub', email: 'Email', mission: 'Mission' },
 } as const;
 
 export function Footer() {
@@ -20,13 +20,13 @@ export function Footer() {
         <div>© 2026 Wansang Kim</div>
         <div className="flex gap-4">
           <a href="https://github.com/wansang93" target="_blank" rel="noreferrer" className="hover:text-fg">
-            GitHub
+            {t.github}
           </a>
           <a href="mailto:wansangk93@gmail.com" className="hover:text-fg">
-            Email
+            {t.email}
           </a>
-          <Link href={prefixed('/project/webpage/2021/', lang)} className="hover:text-fg">
-            {t.archive}
+          <Link href={prefixed('/mission/', lang)} className="hover:text-fg">
+            {t.mission}
           </Link>
         </div>
       </div>

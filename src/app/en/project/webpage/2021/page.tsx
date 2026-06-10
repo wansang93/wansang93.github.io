@@ -1,10 +1,12 @@
 import Link from 'next/link';
+import { MissionPing } from '@/components/mission-ping';
 
 export const metadata = { title: 'Webpage 2021' };
 
 export default function Webpage2021En() {
   return (
     <article className="space-y-10">
+      <MissionPing id="visit-2021-archive" />
       <header>
         <p className="text-sm text-muted">
           <Link href="/en/project/" className="hover:text-fg">
