@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export const metadata = { title: 'Webpage 2021' };
+export const metadata = { title: '첫번째 홈페이지 제작' };
 
 export default function Webpage2021() {
   return (
@@ -17,7 +17,7 @@ export default function Webpage2021() {
           / 2021
         </p>
         <h1 className="mt-2 font-serif text-4xl font-semibold tracking-tight">
-          웹페이지 2021
+          첫번째 홈페이지 제작
         </h1>
         <p className="mt-2 text-sm text-muted">
           첫 번째 개인 웹페이지 · 2021년 1월 작성
@@ -29,11 +29,27 @@ export default function Webpage2021() {
           Start Bootstrap의 Freelancer 테마를 베이스로 만든 단일 페이지 포트폴리오입니다.
           학부 시절 프로젝트와 호주 여행 사진, 자기소개를 한 화면에 모았습니다.
         </p>
-        <p>
-          현재 사이트의 출발점이자 기록 보존을 위해 원본 그대로 아카이브해 두었습니다.
-          이후 버전은 같은 경로 규칙(<code className="font-mono text-sm bg-border/40 px-1.5 py-0.5 rounded">/project/webpage/&lt;연도&gt;/</code>)으로 계속 추가됩니다.
-        </p>
+        <p>현재 사이트의 출발점이자 기록 보존을 위해 원본 그대로 아카이브해 두었습니다.</p>
       </section>
+
+      <figure className="space-y-2">
+        <a
+          href="/project/webpage/2021/site/index.html"
+          target="_blank"
+          rel="noreferrer"
+          className="block overflow-hidden rounded-lg border border-border hover:border-accent transition-colors"
+        >
+          <img
+            src="/project/webpage/2021/preview.png"
+            alt="2021년 첫 홈페이지 전체 페이지 캡쳐"
+            className="w-full h-auto block"
+            loading="lazy"
+          />
+        </a>
+        <figcaption className="text-xs text-muted">
+          ↑ 전체 페이지 미리보기 — 헤더 / 자기소개 / 포트폴리오 / About / 호주 사진 / GAME / Contact 까지 한 화면에 쌓아 둔 single-page 구성. 이미지를 누르면 원본 페이지가 새 창으로 열립니다.
+        </figcaption>
+      </figure>
 
       <section>
         <h2 className="font-serif text-lg font-semibold mb-3">Stack</h2>

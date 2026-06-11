@@ -8,7 +8,7 @@ import { searchItems } from '@/lib/search';
 const dict = {
   ko: {
     open: '검색 열기 (Ctrl+K)',
-    placeholder: '페이지 검색...',
+    placeholder: '사이트 전체 검색...',
     empty: '검색 결과가 없습니다.',
     hintNav: '↑↓ 이동',
     hintEnter: 'Enter 이동',
@@ -16,13 +16,76 @@ const dict = {
   },
   en: {
     open: 'Open search (Ctrl+K)',
-    placeholder: 'Search pages...',
+    placeholder: 'Search the site...',
     empty: 'No results.',
     hintNav: '↑↓ to move',
     hintEnter: 'Enter to go',
     hintEsc: 'Esc to close',
   },
+  zh: {
+    open: '打开搜索 (Ctrl+K)',
+    placeholder: '搜索全站...',
+    empty: '无结果。',
+    hintNav: '↑↓ 移动',
+    hintEnter: 'Enter 进入',
+    hintEsc: 'Esc 关闭',
+  },
+  ja: {
+    open: '検索を開く (Ctrl+K)',
+    placeholder: 'サイト全体を検索...',
+    empty: '結果がありません。',
+    hintNav: '↑↓ で移動',
+    hintEnter: 'Enter で移動',
+    hintEsc: 'Esc で閉じる',
+  },
 } as const;
+
+function tokenize(q: string): string[] {
+  return q.trim().toLowerCase().split(/\s+/).filter(Boolean);
+}
+
+function highlight(text: string, tokens: string[]): React.ReactNode {
+  if (tokens.length === 0 || !text) return text;
+  const lower = text.toLowerCase();
+  const spans: { start: number; end: number }[] = [];
+  for (const t of tokens) {
+    if (!t) continue;
+    let from = 0;
+    while (from <= lower.length - t.length) {
+      const idx = lower.indexOf(t, from);
+      if (idx === -1) break;
+      spans.push({ start: idx, end: idx + t.length });
+      from = idx + t.length;
+    }
+  }
+  if (spans.length === 0) return text;
+  spans.sort((a, b) => a.start - b.start);
+  const merged: { start: number; end: number }[] = [];
+  for (const s of spans) {
+    const last = merged[merged.length - 1];
+    if (last && s.start <= last.end) {
+      last.end = Math.max(last.end, s.end);
+    } else {
+      merged.push({ ...s });
+    }
+  }
+  const out: React.ReactNode[] = [];
+  let cursor = 0;
+  merged.forEach((m, i) => {
+    if (m.start > cursor) out.push(text.slice(cursor, m.start));
+    out.push(
+      <mark
+        key={i}
+        className="bg-accent/25 text-fg rounded-sm px-0.5 -mx-0.5"
+      >
+        {text.slice(m.start, m.end)}
+      </mark>,
+    );
+    cursor = m.end;
+  });
+  if (cursor < text.length) out.push(text.slice(cursor));
+  return out;
+}
 
 export function Search() {
   const pathname = usePathname() || '/';
@@ -36,6 +99,7 @@ export function Search() {
   const listRef = useRef<HTMLUListElement>(null);
 
   const results = useMemo(() => searchItems(query, lang), [query, lang]);
+  const tokens = useMemo(() => tokenize(query), [query]);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -52,7 +116,6 @@ export function Search() {
     if (open) {
       setQuery('');
       setActive(0);
-      // focus input after render
       setTimeout(() => inputRef.current?.focus(), 0);
     }
   }, [open]);
@@ -70,7 +133,6 @@ export function Search() {
     };
   }, [open]);
 
-  // Keep active item in view
   useEffect(() => {
     const el = listRef.current?.children[active] as HTMLElement | undefined;
     el?.scrollIntoView({ block: 'nearest' });
@@ -83,25 +145,30 @@ export function Search() {
       router.push(prefixed(href, lang));
       setOpen(false);
     },
-    [lang, router]
+    [lang, router],
   );
 
-  function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      setActive((i) => Math.min(i + 1, Math.max(results.length - 1, 0)));
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      setActive((i) => Math.max(i - 1, 0));
-    } else if (e.key === 'Enter') {
-      e.preventDefault();
-      const item = results[active];
-      if (item) go(item.href);
-    } else if (e.key === 'Escape') {
-      e.preventDefault();
-      close();
+  useEffect(() => {
+    if (!open) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        setActive((i) => Math.min(i + 1, Math.max(results.length - 1, 0)));
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        setActive((i) => Math.max(i - 1, 0));
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        const r = results[active];
+        if (r) go(r.item.href);
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        close();
+      }
     }
-  }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open, results, active, go, close]);
 
   return (
     <>
@@ -127,7 +194,7 @@ export function Search() {
           onClick={close}
         >
           <div
-            className="w-full max-w-lg rounded-2xl border border-border bg-bg shadow-xl overflow-hidden"
+            className="w-full max-w-xl rounded-2xl border border-border bg-bg shadow-xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="relative border-b border-border">
@@ -142,7 +209,6 @@ export function Search() {
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                onKeyDown={onKeyDown}
                 placeholder={t.placeholder}
                 className="w-full bg-transparent pl-11 pr-4 py-4 text-base outline-none placeholder:text-muted"
               />
@@ -157,29 +223,31 @@ export function Search() {
               {results.length === 0 ? (
                 <li className="px-4 py-6 text-center text-sm text-muted">{t.empty}</li>
               ) : (
-                results.map((item, i) => {
+                results.map((r, i) => {
                   const isActive = i === active;
                   return (
-                    <li key={item.href} role="option" aria-selected={isActive}>
+                    <li key={r.item.href} role="option" aria-selected={isActive}>
                       <button
                         type="button"
                         onMouseEnter={() => setActive(i)}
-                        onClick={() => go(item.href)}
-                        className={`w-full flex items-baseline justify-between gap-4 text-left px-4 py-3 transition-colors ${
+                        onClick={() => go(r.item.href)}
+                        className={`w-full flex flex-col gap-1 text-left px-4 py-3 transition-colors ${
                           isActive ? 'bg-border/60 text-fg' : 'text-muted hover:bg-border/40'
                         }`}
                       >
-                        <span className="flex flex-col min-w-0">
+                        <div className="flex items-baseline justify-between gap-3">
                           <span className={`text-sm font-medium ${isActive ? 'text-fg' : 'text-fg/90'}`}>
-                            {item.title[lang]}
+                            {highlight(r.item.title[lang], tokens)}
                           </span>
-                          {item.description && (
-                            <span className="text-xs text-muted truncate">{item.description[lang]}</span>
-                          )}
-                        </span>
-                        <span className="font-mono text-[11px] text-muted shrink-0">
-                          {prefixed(item.href, lang)}
-                        </span>
+                          <span className="font-mono text-[10px] text-muted shrink-0 truncate max-w-[40%]">
+                            {prefixed(r.item.href, lang)}
+                          </span>
+                        </div>
+                        {r.snippet && (
+                          <span className="text-xs text-muted leading-relaxed line-clamp-2">
+                            {highlight(r.snippet, tokens)}
+                          </span>
+                        )}
                       </button>
                     </li>
                   );

@@ -1,13 +1,13 @@
 import { PATCH_NOTES } from '@/lib/patch-notes';
 
-export const metadata = { title: '패치노트' };
+export const metadata = { title: 'パッチノート' };
 
-export default function UpdatesPage() {
+export default function UpdatesPageJa() {
   return (
     <div className="space-y-10">
       <header>
-        <h1 className="font-serif text-4xl font-semibold tracking-tight">패치노트</h1>
-        <p className="mt-3 text-muted">사이트 변경 이력을 기록합니다.</p>
+        <h1 className="font-serif text-4xl font-semibold tracking-tight">パッチノート</h1>
+        <p className="mt-3 text-muted">このサイトの変更履歴です。</p>
       </header>
 
       <ol className="space-y-10">
@@ -17,9 +17,9 @@ export default function UpdatesPage() {
               <span className="font-mono text-sm text-accent">{e.version}</span>
               <span className="text-xs text-muted">{e.date}</span>
             </div>
-            <h2 className="mt-2 font-serif text-xl font-semibold">{e.title.ko}</h2>
+            <h2 className="mt-2 font-serif text-xl font-semibold">{e.title.ja}</h2>
             <ul className="mt-3 space-y-1.5 text-sm text-muted leading-relaxed">
-              {e.details.ko.map((d, i) => (
+              {e.details.ja.map((d, i) => (
                 <li key={i} className="flex gap-2">
                   <span aria-hidden className="text-border">—</span>
                   <span>{d}</span>

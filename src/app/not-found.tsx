@@ -8,18 +8,29 @@ export default function NotFound() {
   const pathname = usePathname() || '/';
   const lang = detectLang(pathname);
 
-  const t =
-    lang === 'ko'
-      ? {
-          title: '페이지를 찾을 수 없습니다',
-          desc: '주소가 잘못되었거나 페이지가 이동/삭제되었습니다.',
-          home: '홈으로',
-        }
-      : {
-          title: 'Page not found',
-          desc: 'The URL is wrong, or the page has moved or been removed.',
-          home: 'Back home',
-        };
+  const dict = {
+    ko: {
+      title: '페이지를 찾을 수 없습니다',
+      desc: '주소가 잘못되었거나 페이지가 이동/삭제되었습니다.',
+      home: '홈으로',
+    },
+    en: {
+      title: 'Page not found',
+      desc: 'The URL is wrong, or the page has moved or been removed.',
+      home: 'Back home',
+    },
+    zh: {
+      title: '页面未找到',
+      desc: '网址有误,或页面已被移动 / 删除。',
+      home: '返回首页',
+    },
+    ja: {
+      title: 'ページが見つかりません',
+      desc: 'URL が間違っているか、ページが移動・削除されました。',
+      home: 'ホームへ',
+    },
+  } as const;
+  const t = dict[lang];
 
   return (
     <div className="min-h-[60vh] flex flex-col items-center justify-center text-center space-y-6">

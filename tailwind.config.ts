@@ -9,8 +9,8 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Pretendard', 'var(--font-inter)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        serif: ['var(--font-fraunces)', 'Pretendard', 'ui-serif', 'Georgia', 'serif'],
+        sans: ['var(--font-pretendard)', 'var(--font-inter)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        serif: ['var(--font-fraunces)', 'var(--font-pretendard)', 'ui-serif', 'Georgia', 'serif'],
         mono: ['var(--font-jetbrains)', 'ui-monospace', 'monospace'],
       },
       colors: {

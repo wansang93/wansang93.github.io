@@ -5,7 +5,7 @@ export const metadata = { title: 'Project — Webpage' };
 const versions = [
   {
     year: '2021',
-    title: '2021 — Bootstrap Portfolio',
+    title: 'My first homepage',
     description: 'The first version. A single-page portfolio based on the Start Bootstrap Freelancer theme.',
     href: '/en/project/webpage/2021/',
   },

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   MISSIONS,
   completeMission,
@@ -17,7 +17,7 @@ const dict = {
     pendingTag: '미완료',
     hiddenTag: '히든',
     hiddenLockedTitle: '???',
-    hiddenLockedHint: '웹 개발자라면 누르는 버튼이에요. 모바일에서는 로고에 비밀이 있어요.',
+    hiddenLockedHint: '개발자가 본능처럼 누르는 그 키 한 번. 모바일이면 이 카드를 1초 꾹 눌러봐요.',
     showExtraHint: '힌트 보기',
     hideExtraHint: '힌트 접기',
     extraHint: '패치노트에 히든 미션 달성법이 적혀있어요.',
@@ -27,6 +27,8 @@ const dict = {
     sectionMain: '페이지 100% 즐기기',
     sectionHidden: '히든 미션',
     launchFireworks: '🎆 미션 달성 폭죽 터트리기',
+    darkModeTitleOn: '밤 모드로 옷 갈아입기',
+    darkModeTitleOff: '다시 낮으로 돌아가기',
   },
   en: {
     progressLabel: 'completed',
@@ -34,7 +36,7 @@ const dict = {
     pendingTag: 'Pending',
     hiddenTag: 'Hidden',
     hiddenLockedTitle: '???',
-    hiddenLockedHint: "It's a button web developers press. On mobile, the logo holds a secret.",
+    hiddenLockedHint: 'The key developers reach for on instinct. On mobile, press and hold this card for 1 second.',
     showExtraHint: 'Show hint',
     hideExtraHint: 'Hide hint',
     extraHint: 'The patch notes describe how to unlock hidden missions.',
@@ -44,6 +46,46 @@ const dict = {
     sectionMain: 'Make the most of the site',
     sectionHidden: 'Hidden missions',
     launchFireworks: '🎆 Launch celebration fireworks',
+    darkModeTitleOn: 'Slip into night mode',
+    darkModeTitleOff: 'Step back into daylight',
+  },
+  zh: {
+    progressLabel: '已完成',
+    completedTag: '已完成',
+    pendingTag: '未完成',
+    hiddenTag: '隐藏',
+    hiddenLockedTitle: '???',
+    hiddenLockedHint: '开发者顺手就按的那个键。手机上则按住这张卡片 1 秒钟。',
+    showExtraHint: '查看提示',
+    hideExtraHint: '收起提示',
+    extraHint: '补丁说明里写着隐藏任务的达成方式。',
+    reset: '重置任务',
+    cardReset: '点击重置',
+    empty: '暂无任务。',
+    sectionMain: '充分体验本站',
+    sectionHidden: '隐藏任务',
+    launchFireworks: '🎆 庆祝烟花',
+    darkModeTitleOn: '换上夜间装扮',
+    darkModeTitleOff: '回到白天',
+  },
+  ja: {
+    progressLabel: '達成',
+    completedTag: '達成',
+    pendingTag: '未達成',
+    hiddenTag: '隠し',
+    hiddenLockedTitle: '???',
+    hiddenLockedHint: '開発者が思わず押すあのキーをひと押し。モバイルではこのカードを 1 秒押したままに。',
+    showExtraHint: 'ヒントを見る',
+    hideExtraHint: 'ヒントを閉じる',
+    extraHint: 'パッチノートに隠しミッションの達成方法が書かれています。',
+    reset: 'ミッションをリセット',
+    cardReset: 'クリックでリセット',
+    empty: 'まだミッションはありません。',
+    sectionMain: 'サイトを100%楽しむ',
+    sectionHidden: '隠しミッション',
+    launchFireworks: '🎆 ミッション達成花火',
+    darkModeTitleOn: '夜モードに着替える',
+    darkModeTitleOff: '昼に戻る',
   },
 } as const;
 
@@ -63,23 +105,49 @@ export function MissionList({ lang }: { lang: Lang }) {
       setFindCountdown(null);
       return;
     }
-    setFindCountdown(FIND_PAGE_DURATION);
-    let remaining = FIND_PAGE_DURATION;
-    const interval = window.setInterval(() => {
-      remaining -= 1;
-      if (remaining > 0) {
-        setFindCountdown(remaining);
-      } else {
-        window.clearInterval(interval);
-        setFindCountdown(null);
-      }
-    }, 1000);
-    const timer = window.setTimeout(() => {
-      completeMission('find-mission-page');
-    }, FIND_PAGE_DURATION * 1000);
+
+    let interval = 0;
+    let timer = 0;
+
+    function startTimer() {
+      window.clearInterval(interval);
+      window.clearTimeout(timer);
+      setFindCountdown(FIND_PAGE_DURATION);
+      let remaining = FIND_PAGE_DURATION;
+      interval = window.setInterval(() => {
+        remaining -= 1;
+        if (remaining > 0) {
+          setFindCountdown(remaining);
+        } else {
+          window.clearInterval(interval);
+        }
+      }, 1000);
+      timer = window.setTimeout(() => {
+        completeMission('find-mission-page');
+      }, FIND_PAGE_DURATION * 1000);
+    }
+
+    function onActivity() {
+      startTimer();
+    }
+
+    startTimer();
+
+    const events: (keyof WindowEventMap)[] = [
+      'mousemove',
+      'mousedown',
+      'keydown',
+      'wheel',
+      'scroll',
+      'touchstart',
+      'touchmove',
+    ];
+    events.forEach((ev) => window.addEventListener(ev, onActivity, { passive: true }));
+
     return () => {
       window.clearInterval(interval);
       window.clearTimeout(timer);
+      events.forEach((ev) => window.removeEventListener(ev, onActivity));
     };
   }, [state]);
 
@@ -98,10 +166,7 @@ export function MissionList({ lang }: { lang: Lang }) {
         {done > 0 && (
           <button
             type="button"
-            onClick={() => {
-              reset();
-              completeMission('find-mission-page');
-            }}
+            onClick={() => reset()}
             className="text-xs text-muted hover:text-fg transition-colors"
           >
             {t.reset}
@@ -219,33 +284,88 @@ function MissionCard({
   const isHidden = !!mission.hidden;
   const isPersistent = !!mission.persistent;
   const masked = isHidden && !done && !isPersistent;
-  const title = masked ? t.hiddenLockedTitle : mission.title[lang];
-  const baseHint = masked ? t.hiddenLockedHint : mission.hint[lang];
+
+  const [isDark, setIsDark] = useState(false);
+  useEffect(() => {
+    if (mission.id !== 'toggle-dark-mode') return;
+    function update() {
+      setIsDark(document.documentElement.classList.contains('dark'));
+    }
+    update();
+    const observer = new MutationObserver(update);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, [mission.id]);
+
+  const longPressEnabled = mission.id === 'discover-f12' && masked;
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [isPressing, setIsPressing] = useState(false);
+
+  function startLongPress() {
+    if (!longPressEnabled) return;
+    setIsPressing(true);
+    longPressTimer.current = setTimeout(() => {
+      completeMission('discover-f12');
+      setIsPressing(false);
+    }, 1000);
+  }
+  function cancelLongPress() {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+    setIsPressing(false);
+  }
+  useEffect(() => () => cancelLongPress(), []);
+
+  let title = masked ? t.hiddenLockedTitle : mission.title[lang];
+  if (mission.id === 'toggle-dark-mode' && !masked) {
+    title = isDark ? t.darkModeTitleOff : t.darkModeTitleOn;
+  }
+  const baseHint = masked
+    ? mission.lockedHint?.[lang] || t.hiddenLockedHint
+    : mission.hint[lang];
 
   let hintNode: React.ReactNode = baseHint;
   if (mission.id === 'find-mission-page' && !done && countdown != null) {
+    const secondsText =
+      lang === 'ko'
+        ? `${countdown}초`
+        : lang === 'zh'
+          ? `${countdown}秒`
+          : lang === 'ja'
+            ? `${countdown}秒`
+            : `${countdown} seconds`;
     const seconds = (
-      <span className="text-accent font-medium tabular-nums">
-        {lang === 'ko' ? `${countdown}초` : `${countdown} seconds`}
-      </span>
+      <span className="text-accent font-medium tabular-nums">{secondsText}</span>
     );
-    hintNode =
-      lang === 'ko' ? (
-        <>이 페이지에 {seconds} 이상 머무르면 자동으로 달성돼요.</>
-      ) : (
-        <>Stay on this page for at least {seconds} and it unlocks automatically.</>
-      );
+    if (lang === 'ko') {
+      hintNode = <>{seconds} 정도만 더 머무르면 자동으로 클리어. 그 사이 다른 미션도 한 번 훑어봐요.</>;
+    } else if (lang === 'zh') {
+      hintNode = <>再停留 {seconds} 自动完成。趁机看看其他任务吧。</>;
+    } else if (lang === 'ja') {
+      hintNode = <>あと {seconds} 留まると自動でクリア。その間に他のミッションも覗いてみてください。</>;
+    } else {
+      hintNode = <>Hang on {seconds} more and it clears itself. Peek at the other missions while you wait.</>;
+    }
   }
 
   return (
     <li
+      onPointerDown={startLongPress}
+      onPointerUp={cancelLongPress}
+      onPointerLeave={cancelLongPress}
+      onPointerCancel={cancelLongPress}
+      onContextMenu={longPressEnabled ? (e) => e.preventDefault() : undefined}
       className={`rounded-lg border p-5 transition-colors ${
         done
           ? 'border-accent/60 bg-accent/5'
           : masked
             ? 'border-dashed border-border bg-border/10'
             : 'border-border'
-      }`}
+      } ${
+        longPressEnabled ? 'cursor-pointer select-none touch-manipulation' : ''
+      } ${isPressing ? 'scale-[0.98] bg-accent/10' : ''}`}
     >
       <div className="flex items-start gap-4">
         {done ? (

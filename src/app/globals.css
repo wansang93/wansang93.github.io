@@ -2,14 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'Pretendard';
-  src: url('/fonts/PretendardVariable.woff2') format('woff2-variations');
-  font-weight: 45 920;
-  font-style: normal;
-  font-display: swap;
-}
-
 :root {
   --color-bg: 250 250 249;
   --color-fg: 28 25 23;
@@ -37,6 +29,19 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+html[lang='zh'] body {
+  font-family: 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', 'Source Han Sans SC', 'Source Han Sans CN', sans-serif;
+}
+
+html[lang='ja'] body {
+  font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', 'Noto Sans JP', 'Source Han Sans JP', sans-serif;
+}
+
+html[lang='zh'] .font-serif,
+html[lang='ja'] .font-serif {
+  font-family: var(--font-fraunces), inherit;
+}
+
 ::selection {
   background-color: rgb(var(--color-accent) / 0.25);
 }
@@ -53,6 +58,37 @@ body {
   100% {
     transform: translate(var(--dx), calc(var(--dy) + 280px)) rotate(540deg);
     opacity: 0;
+  }
+}
+
+@keyframes toast-in {
+  from {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes toast-out {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+}
+
+@keyframes toast-progress {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
   }
 }
 

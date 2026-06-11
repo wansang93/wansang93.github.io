@@ -1,28 +1,28 @@
 import Link from 'next/link';
 
-export const metadata = { title: 'Project — Webpage' };
+export const metadata = { title: '项目 — 网页' };
 
 const versions = [
   {
     year: '2021',
-    title: '첫번째 홈페이지 제작',
-    description: '첫 번째 버전. Start Bootstrap Freelancer 테마 기반 단일 페이지 포트폴리오.',
-    href: '/project/webpage/2021/',
+    title: '我的第一个个人主页',
+    description: '第一个版本。基于 Start Bootstrap Freelancer 主题的单页作品集。',
+    href: '/zh/project/webpage/2021/',
   },
 ];
 
-export default function WebpageIndex() {
+export default function WebpageIndexZh() {
   return (
     <div className="space-y-10">
       <header>
         <p className="text-sm text-muted">
-          <Link href="/project/" className="hover:text-fg">
-            프로젝트
+          <Link href="/zh/project/" className="hover:text-fg">
+            项目
           </Link>{' '}
-          / 웹페이지
+          / 网页
         </p>
-        <h1 className="mt-2 font-serif text-4xl font-semibold tracking-tight">웹페이지</h1>
-        <p className="mt-3 text-muted">매년 리빌드한 개인 웹페이지 버전 아카이브.</p>
+        <h1 className="mt-2 font-serif text-4xl font-semibold tracking-tight">网页</h1>
+        <p className="mt-3 text-muted">每年重建的个人网站,按版本存档。</p>
       </header>
 
       <ul className="space-y-3">
@@ -34,7 +34,7 @@ export default function WebpageIndex() {
             >
               <div className="flex items-baseline justify-between gap-4">
                 <div className="font-serif text-xl font-semibold">{v.title}</div>
-                <span className="text-xs text-muted">자세히 →</span>
+                <span className="text-xs text-muted">查看 →</span>
               </div>
               <p className="mt-1 text-sm text-muted">{v.description}</p>
             </Link>

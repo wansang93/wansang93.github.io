@@ -5,6 +5,8 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { detectLang, prefixed, type Lang } from '@/lib/i18n';
 import { completeMission } from '@/lib/missions';
+// Note: discover-f12 hidden mission is triggered by F12 (window keydown, see MissionTracker)
+// or by long-pressing the masked mission card on mobile (see MissionCard).
 import { ThemeToggle } from './theme-toggle';
 import { LanguageToggle } from './language-toggle';
 import { Search } from './search';
@@ -41,6 +43,26 @@ const dict: Record<Lang, NavLabels> = {
     menu: 'Open menu',
     close: 'Close menu',
   },
+  zh: {
+    home: '主页',
+    blog: '博客',
+    project: '项目',
+    about: '关于',
+    webpage: '网页',
+    all: (label) => `全部${label}`,
+    menu: '打开菜单',
+    close: '关闭菜单',
+  },
+  ja: {
+    home: 'ホーム',
+    blog: 'ブログ',
+    project: 'プロジェクト',
+    about: '自己紹介',
+    webpage: 'ウェブページ',
+    all: (label) => `${label}一覧`,
+    menu: 'メニューを開く',
+    close: 'メニューを閉じる',
+  },
 };
 
 export function Nav() {
@@ -48,30 +70,6 @@ export function Nav() {
   const lang = detectLang(pathname);
   const t = dict[lang];
   const [mobileOpen, setMobileOpen] = useState(false);
-  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const longPressFired = useRef(false);
-
-  function startLogoPress() {
-    longPressFired.current = false;
-    longPressTimer.current = setTimeout(() => {
-      longPressFired.current = true;
-      completeMission('discover-f12');
-    }, 1000);
-  }
-
-  function cancelLogoPress() {
-    if (longPressTimer.current) {
-      clearTimeout(longPressTimer.current);
-      longPressTimer.current = null;
-    }
-  }
-
-  function onLogoClick(e: React.MouseEvent) {
-    if (longPressFired.current) {
-      e.preventDefault();
-      longPressFired.current = false;
-    }
-  }
 
   useEffect(() => {
     document.documentElement.lang = lang;
@@ -122,16 +120,10 @@ export function Nav() {
       <nav className="mx-auto max-w-3xl px-6 h-16 flex items-center justify-between">
         <Link
           href={prefixed('/', lang)}
-          onPointerDown={startLogoPress}
-          onPointerUp={cancelLogoPress}
-          onPointerLeave={cancelLogoPress}
-          onPointerCancel={cancelLogoPress}
-          onClick={onLogoClick}
-          onContextMenu={(e) => e.preventDefault()}
-          className="font-serif text-lg font-semibold tracking-tight select-none touch-manipulation"
+          className="font-serif text-lg font-semibold tracking-tight"
         >
           wansang
-          <span className="text-accent">.</span>
+          <span className="text-accent">93</span>
         </Link>
 
         <ul className="hidden sm:flex items-center gap-1 text-sm">

@@ -31,14 +31,44 @@ const dict = {
     go: 'Go to missions →',
     close: 'Close',
   },
+  zh: {
+    introBadge: '🎉 首个任务达成!',
+    introHeadline: '你发现了任务!',
+    introBody: '网站各处藏着小任务,也别忘了找出隐藏任务。',
+    hiddenBadge: '发现隐藏任务',
+    hiddenHeadline: (ord: string) => `已解锁第${ord}个隐藏任务。`,
+    hiddenProgress: (c: number, t: number) => `进度 (${c}/${t})`,
+    hiddenBody: '在任务页面查看其他任务吧。',
+    go: '前往任务页面 →',
+    close: '关闭',
+  },
+  ja: {
+    introBadge: '🎉 はじめてのミッション達成!',
+    introHeadline: 'ミッションを見つけました!',
+    introBody: 'サイトのあちこちに小さなミッションが隠れています。隠しミッションも探してみてください。',
+    hiddenBadge: '隠しミッション発見',
+    hiddenHeadline: (ord: string) => `${ord}の隠しミッションを達成しました。`,
+    hiddenProgress: (c: number, t: number) => `達成状況 (${c}/${t})`,
+    hiddenBody: 'ミッションページで他のミッションも確認してください。',
+    go: 'ミッションページへ →',
+    close: '閉じる',
+  },
 } as const;
 
 const KOREAN_ORDINALS = ['첫', '두', '세', '네', '다섯', '여섯', '일곱', '여덟', '아홉', '열'];
 
 function ordinal(n: number, lang: Lang): string {
-  if (n < 1) return lang === 'ko' ? '히든' : 'first';
+  if (n < 1) {
+    if (lang === 'ko') return '히든';
+    if (lang === 'zh') return '隐藏';
+    if (lang === 'ja') return '隠し';
+    return 'first';
+  }
   if (lang === 'ko') {
     return n <= KOREAN_ORDINALS.length ? `${KOREAN_ORDINALS[n - 1]}번째` : `${n}번째`;
+  }
+  if (lang === 'zh' || lang === 'ja') {
+    return `${n}`;
   }
   const v = n % 100;
   const s = ['th', 'st', 'nd', 'rd'];
@@ -70,7 +100,8 @@ export function MissionTracker() {
         setMode('intro');
         return;
       }
-      if (detail?.id === 'discover-f12') {
+      const completed = MISSIONS.find((m) => m.id === detail?.id);
+      if (completed?.hidden) {
         setProgress({ completed: detail.completedHidden, total: detail.totalHidden });
         setMode('hidden');
       }
@@ -82,6 +113,12 @@ export function MissionTracker() {
       window.removeEventListener('missions:unlocked', onUnlocked);
     };
   }, []);
+
+  useEffect(() => {
+    if (/^\/(en\/|zh\/|ja\/)?patch-notes\/?$/.test(pathname)) {
+      completeMission('visit-patch-notes');
+    }
+  }, [pathname]);
 
   if (!mode) return null;
 

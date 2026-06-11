@@ -56,22 +56,37 @@ public/project/webpage/2021/site/   # 2021 정적 아카이브 (수정 금지)
 - `src/components/nav.tsx`의 `DropdownMenu`는 Project 메뉴용. 새 Project 카테고리 추가하면 `projectMenu.groups`에도 항목 추가해야 보임.
 
 ### 검색 (Ctrl/Cmd+K)
-- 헤더 우측 돋보기 버튼 또는 Ctrl/Cmd+K로 검색 모달 열림. 라우트별 페이지 인덱스에서 substring 매칭.
-- 검색 인덱스는 [src/lib/search.ts](src/lib/search.ts)의 `SEARCH_ITEMS` 배열에 정의. href는 한국어 경로(절대), 클릭 시 현재 lang에 맞춰 `/en/`이 자동 prefix됨.
-- **새 페이지를 추가할 때마다 SEARCH_ITEMS에도 항목 추가** — 안 그러면 검색에서 안 보임. KO/EN title 둘 다, 가능하면 description도.
+- 헤더 우측 돋보기 버튼 또는 Ctrl/Cmd+K로 검색 모달 열림. **전체 본문 검색** — 페이지 제목·설명·본문 텍스트(`body` 필드)를 모두 인덱싱하고 매칭된 구절을 스니펫으로 보여줌 (Claude Code docs 스타일).
+- 검색 인덱스는 [src/lib/search.ts](src/lib/search.ts)의 `SEARCH_ITEMS` 배열. 각 항목은 `title`, optional `description`, `body` (모두 4언어 `Localized` 객체). href는 한국어 경로(절대), 클릭 시 현재 lang에 맞춰 `/en/` `/zh/` `/ja/`가 자동 prefix됨.
+- `searchItems()`는 토큰 단위 AND 매칭(공백 분리) + 결과 랭킹(제목 > 설명 > URL > 본문). 스니펫은 현재 lang 본문에서 먼저 찾고, 없으면 다른 언어 본문에서, 그래도 없으면 description 폴백.
+- 동적 페이지의 body는 데이터 소스에서 직접 생성:
+  - `/mission/` body는 `MISSIONS`의 title+hint를 join — **미션 추가하면 자동으로 검색됨**.
+  - `/patch-notes/` body는 `PATCH_NOTES`의 version+title+details를 join — **새 패치노트도 자동 반영**.
+- **새 페이지를 추가할 때마다 SEARCH_ITEMS에도 항목 추가** — 안 그러면 검색에서 안 보임. 4언어 title + 가능하면 description + 페이지의 실제 본문 텍스트를 body에 작성.
 
 ### 미션 시스템 (이스터에그)
 - 사이트에 숨겨진 미션. 진입로는 **Footer 링크만**이라 일반 사용자에겐 잘 안 보임.
 - 미션 정의는 [src/lib/missions.ts](src/lib/missions.ts)의 `MISSIONS` 배열에 추가. `id` 타입(`MissionId`)도 함께 확장.
+- Mission 필드: `title`/`hint` (4언어), 옵션 `lockedHint` (히든 미션이 마스킹 상태일 때 보이는 hint — 미션마다 다른 잠긴 안내 가능), `hidden`, `persistent`.
 - 진행 상태는 `localStorage['missions:v1']`에 저장. SSR 안전.
 - 완료 처리는 두 가지 경로:
-  - 이벤트 hook (예: F12 keydown) → `completeMission('id')` 호출. `MissionTracker`가 모달도 띄움.
+  - 이벤트 hook (예: F12 keydown, pathname 매치) → `completeMission('id')` 호출. `MissionTracker`가 모달도 띄움.
   - UI 토글 (예: 미션 페이지에서 직접 체크) → `useMissions().toggle('id')`.
+- 모바일 히든 미션 트리거는 보통 `MissionCard`에서 직접 long-press (1초). 글로벌 요소(로고 등)에 트리거 걸지 말 것 — 사용자가 "왜 이게 반응하지" 의문 생김.
 - 새 미션 추가 시 체크리스트:
   - `MissionId` 유니온에 추가
-  - `MISSIONS`에 KO/EN 타이틀·힌트 작성
+  - `MISSIONS`에 4언어 타이틀·힌트(필요시 lockedHint) 작성
   - 완료 트리거를 어디서 부를지 결정 (이벤트 / 페이지 방문 / 수동)
   - 필요하면 [src/components/mission-tracker.tsx](src/components/mission-tracker.tsx)에 모달 트리거 추가
+
+### 패치노트 작성
+- 데이터는 [src/lib/patch-notes.ts](src/lib/patch-notes.ts)의 `PATCH_NOTES` 배열. 4언어 title + details를 동시 작성. 각 언어판 [page.tsx](src/app/patch-notes/page.tsx)는 import해서 렌더만 함.
+- **사용자가 읽기 좋게 쓰는 게 1순위.** 패치노트는 일반 방문자가 보는 페이지지, 내부 변경 로그가 아님.
+  - 기술 용어(useEffect, `next/font/local`, FOUT, `:lang()`, refactoring 등)는 피하고, 사용자가 체감하는 변화로 풀어쓸 것.
+  - 한 줄에 한 변경, **4~7개 정도**. 잡다한 내부 정리는 묶어서 한 줄로. 너무 많으면 핵심이 묻힘.
+  - "무엇이 바뀌었나" 보다 **"사용자에게 어떤 차이가 있나"** 로 작성.
+  - 코드 단위 표현(`page.tsx`, `import`, 컴포넌트명 등) 대신 페이지 이름, 메뉴 이름 같은 사용자 용어 사용.
+- 새 버전 추가 시 배열 **맨 앞에 push** (최신이 위). 버전은 `vX.YYY` 패턴, 날짜는 `YYYY.MM.DD`.
 
 ## 빌드 & 검증
 
