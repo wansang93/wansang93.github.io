@@ -12,6 +12,86 @@ export type PatchNote = {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: 'v0.007',
+    date: '2026.06.11',
+    title: {
+      ko: '미션 알림 토스트 개선 + 힌트 문구 수정',
+      en: 'Mission toast improvements + hint copy updates',
+      zh: '任务提示优化 + 说明文案修改',
+      ja: 'ミッション通知の改善 + ヒント文言の修正',
+    },
+    details: {
+      ko: [
+        '첫 미션 달성 알림이 팝업 대신 토스트로 바뀌었어요 — 10초 유지되고 미션 페이지 바로가기 링크도 함께 표시됩니다',
+        '미션 토스트에 마우스를 올리거나 모바일에서 손을 대면 타이머가 멈춥니다. 이때 닫기 버튼이 강조 표시됩니다',
+        '다크모드가 이미 켜진 상태에서 "밤 모드" 미션 힌트가 더 자연스러운 문구로 바뀝니다',
+        '히든 미션 카드 롱프레스 시간을 1초에서 10초로 변경했어요',
+      ],
+      en: [
+        'First-mission alert is now a toast instead of a modal — stays for 10 seconds and includes a shortcut to the mission page',
+        'Hovering or touching a mission toast pauses the timer; the close button is highlighted while paused',
+        'The "night mode" mission hint now shows a different message when dark mode is already on',
+        'Hidden mission card long-press duration changed from 1 second to 10 seconds',
+      ],
+      zh: [
+        '首个任务达成提示从弹窗改为底部通知 —— 显示 10 秒，并附带任务页面快捷链接',
+        '将鼠标悬停或触摸任务通知时，计时器暂停，关闭按钮同时高亮显示',
+        '夜间模式已开启时，"夜间模式"任务的提示文案会自动切换为更合适的内容',
+        '隐藏任务卡片长按时间从 1 秒改为 10 秒',
+      ],
+      ja: [
+        '初ミッション達成の通知がポップアップからトーストに変更 —— 10秒間表示され、ミッションページへのリンク付き',
+        'ミッション通知にマウスを乗せるかタッチすると、タイマーが一時停止し、閉じるボタンが強調表示されます',
+        '夜モードがすでにオンの場合、ミッションのヒントが状況に合った文言に切り替わります',
+        '隠しミッションカードの長押し時間を1秒から10秒に変更',
+      ],
+    },
+  },
+  {
+    version: 'v0.006',
+    date: '2026.06.11',
+    title: {
+      ko: '소개 페이지 타임라인 인터랙션 + 이력서 레이아웃 개선',
+      en: 'About page timeline interactions + résumé layout polish',
+      zh: '关于页面时间轴交互 + 简历布局优化',
+      ja: '自己紹介ページのタイムライン操作 + 職歴レイアウト改善',
+    },
+    details: {
+      ko: [
+        '경력 바 그래프에 마우스 오버·터치 인터랙션 추가 — 해당 바가 강조되고 상단에 기간 정보가 뜹니다',
+        '바를 클릭하면 아래 이력서의 해당 섹션으로 자동 스크롤, 플로팅 "타임라인으로" 버튼으로 바로 돌아올 수 있습니다',
+        '모바일은 첫 번째 탭으로 확대 확인, 두 번째 탭으로 스크롤 이동, 바 밖을 탭하면 원상복구',
+        '이력서 날짜 옆에 총 기간(예: 6개월, 1년 9개월)이 바로 표시됩니다',
+        '이력서 각 항목의 기간이 타임라인 바와 일치하도록 수정 (호주 워킹홀리데이 11개월, 호주여행 1~3월 등)',
+        '첫 번째 홈페이지 페이지 구성 변경 — 스택과 열기 버튼을 맨 위로 이동',
+      ],
+      en: [
+        'Career bar graph now responds to hover and touch — the selected bar highlights with a duration info pill',
+        'Clicking a bar scrolls to that section in the résumé below; a floating button brings you back to the timeline',
+        'Mobile: first tap expands, second tap scrolls, tapping outside the graph resets',
+        'Duration (e.g. 6m, 1y 9m) now appears inline next to each date in the résumé',
+        'Résumé durations now match the timeline bar lengths exactly (AU Working Holiday 11m, AU Trip Jan–Mar, etc.)',
+        'First homepage page reordered — stack and open button moved to the top',
+      ],
+      zh: [
+        '职业经历条形图现在支持悬停和触摸交互 —— 选中的条目高亮显示，并弹出时间段信息',
+        '点击条目可自动滚动到简历对应章节，浮动按钮可快速返回时间轴',
+        '移动端：第一次点击展开，第二次点击跳转，点击图表外侧恢复',
+        '简历中每个日期旁边直接显示总时长（如 6个月、1年9个月）',
+        '简历各项时长已与时间轴条形对齐（澳洲打工度假11个月、澳洲旅行1~3月等）',
+        '第一个主页页面重新排版 —— 技术栈和打开按钮移至顶部',
+      ],
+      ja: [
+        '職歴バーグラフにホバー・タッチ操作を追加 —— 選択したバーがハイライトされ、期間情報が表示されます',
+        'バーをクリックすると職歴の該当セクションへスクロール。フローティングボタンでタイムラインに戻れます',
+        'モバイル：1回タップで拡大確認、2回目のタップでスクロール、外側をタップで元に戻る',
+        '職歴の各日付の横に合計期間（例：6ヶ月、1年9ヶ月）が表示されます',
+        '職歴の各期間がタイムラインバーと一致するよう修正（ワーキングホリデー11ヶ月、旅行1〜3月など）',
+        '最初のホームページページの構成を変更 —— スタックと開くボタンを最上部へ移動',
+      ],
+    },
+  },
+  {
     version: 'v0.005',
     date: '2026.06.11',
     title: {

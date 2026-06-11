@@ -3,16 +3,13 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
-import { MISSIONS, completeMission, getMissionState } from '@/lib/missions';
+import { MISSIONS, completeMission } from '@/lib/missions';
 import { detectLang, prefixed, type Lang } from '@/lib/i18n';
 
-type Mode = 'intro' | 'hidden';
+type Mode = 'hidden';
 
 const dict = {
   ko: {
-    introBadge: '🎉 첫 미션 달성!',
-    introHeadline: '미션을 발견했어요!',
-    introBody: '사이트 곳곳에 숨겨진 미션이 있어요. 히든 미션도 함께 찾아보세요.',
     hiddenBadge: '히든 미션 발견',
     hiddenHeadline: (ord: string) => `${ord} 히든 미션을 달성했습니다.`,
     hiddenProgress: (c: number, t: number) => `완료 현황 (${c}/${t})`,
@@ -21,9 +18,6 @@ const dict = {
     close: '닫기',
   },
   en: {
-    introBadge: '🎉 First mission!',
-    introHeadline: 'You found a mission!',
-    introBody: 'Missions are hidden around the site. Find the secret ones too.',
     hiddenBadge: 'Hidden mission found',
     hiddenHeadline: (ord: string) => `You unlocked your ${ord} hidden mission!`,
     hiddenProgress: (c: number, t: number) => `Progress (${c}/${t})`,
@@ -32,9 +26,6 @@ const dict = {
     close: 'Close',
   },
   zh: {
-    introBadge: '🎉 首个任务达成!',
-    introHeadline: '你发现了任务!',
-    introBody: '网站各处藏着小任务,也别忘了找出隐藏任务。',
     hiddenBadge: '发现隐藏任务',
     hiddenHeadline: (ord: string) => `已解锁第${ord}个隐藏任务。`,
     hiddenProgress: (c: number, t: number) => `进度 (${c}/${t})`,
@@ -43,9 +34,6 @@ const dict = {
     close: '关闭',
   },
   ja: {
-    introBadge: '🎉 はじめてのミッション達成!',
-    introHeadline: 'ミッションを見つけました!',
-    introBody: 'サイトのあちこちに小さなミッションが隠れています。隠しミッションも探してみてください。',
     hiddenBadge: '隠しミッション発見',
     hiddenHeadline: (ord: string) => `${ord}の隠しミッションを達成しました。`,
     hiddenProgress: (c: number, t: number) => `達成状況 (${c}/${t})`,
@@ -94,12 +82,6 @@ export function MissionTracker() {
     }
     function onUnlocked(e: Event) {
       const detail = (e as CustomEvent<{ id: string; completedHidden: number; totalHidden: number }>).detail;
-      const state = getMissionState();
-      const done = MISSIONS.filter((m) => state[m.id]).length;
-      if (done === 1) {
-        setMode('intro');
-        return;
-      }
       const completed = MISSIONS.find((m) => m.id === detail?.id);
       if (completed?.hidden) {
         setProgress({ completed: detail.completedHidden, total: detail.totalHidden });
@@ -122,8 +104,6 @@ export function MissionTracker() {
 
   if (!mode) return null;
 
-  const isIntro = mode === 'intro';
-
   return (
     <div
       role="dialog"
@@ -136,20 +116,14 @@ export function MissionTracker() {
         className="w-full max-w-md rounded-2xl border border-border bg-bg p-6 shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <p className="text-xs uppercase tracking-widest text-accent">
-          {isIntro ? t.introBadge : t.hiddenBadge}
-        </p>
+        <p className="text-xs uppercase tracking-widest text-accent">{t.hiddenBadge}</p>
         <h2 id="mission-modal-title" className="mt-2 font-serif text-2xl font-semibold leading-snug">
-          {isIntro ? t.introHeadline : t.hiddenHeadline(ordinal(progress.completed, lang))}
+          {t.hiddenHeadline(ordinal(progress.completed, lang))}
         </h2>
-        {!isIntro && (
-          <p className="mt-2 font-mono text-xs text-muted">
-            {t.hiddenProgress(progress.completed, progress.total)}
-          </p>
-        )}
-        <p className="mt-3 text-sm text-muted leading-relaxed">
-          {isIntro ? t.introBody : t.hiddenBody}
+        <p className="mt-2 font-mono text-xs text-muted">
+          {t.hiddenProgress(progress.completed, progress.total)}
         </p>
+        <p className="mt-3 text-sm text-muted leading-relaxed">{t.hiddenBody}</p>
         <div className="mt-6 flex items-center justify-end gap-2">
           <button
             type="button"

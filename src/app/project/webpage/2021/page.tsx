@@ -24,6 +24,35 @@ export default function Webpage2021() {
         </p>
       </header>
 
+      <section>
+        <h2 className="font-serif text-lg font-semibold mb-3">Stack</h2>
+        <ul className="flex flex-wrap gap-2 text-xs">
+          {['HTML', 'CSS', 'Bootstrap 4', 'jQuery', 'Font Awesome'].map((t) => (
+            <li
+              key={t}
+              className="px-2.5 py-1 rounded-full border border-border text-muted"
+            >
+              {t}
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="pt-2">
+        <a
+          href="/project/webpage/2021/site/index.html"
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-accent text-white font-medium hover:opacity-90 transition-opacity"
+        >
+          이전 홈페이지 새 창으로 열기
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <path d="M7 17L17 7" />
+            <path d="M7 7h10v10" />
+          </svg>
+        </a>
+      </section>
+
       <section className="space-y-4 text-fg/90 leading-relaxed">
         <p>
           Start Bootstrap의 Freelancer 테마를 베이스로 만든 단일 페이지 포트폴리오입니다.
@@ -50,35 +79,6 @@ export default function Webpage2021() {
           ↑ 전체 페이지 미리보기 — 헤더 / 자기소개 / 포트폴리오 / About / 호주 사진 / GAME / Contact 까지 한 화면에 쌓아 둔 single-page 구성. 이미지를 누르면 원본 페이지가 새 창으로 열립니다.
         </figcaption>
       </figure>
-
-      <section>
-        <h2 className="font-serif text-lg font-semibold mb-3">Stack</h2>
-        <ul className="flex flex-wrap gap-2 text-xs">
-          {['HTML', 'CSS', 'Bootstrap 4', 'jQuery', 'Font Awesome'].map((t) => (
-            <li
-              key={t}
-              className="px-2.5 py-1 rounded-full border border-border text-muted"
-            >
-              {t}
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="pt-2">
-        <a
-          href="/project/webpage/2021/site/index.html"
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-accent text-white font-medium hover:opacity-90 transition-opacity"
-        >
-          아카이브 새 창으로 열기
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-            <path d="M7 17L17 7" />
-            <path d="M7 7h10v10" />
-          </svg>
-        </a>
-      </section>
     </article>
   );
 }

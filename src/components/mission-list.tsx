@@ -17,7 +17,7 @@ const dict = {
     pendingTag: '미완료',
     hiddenTag: '히든',
     hiddenLockedTitle: '???',
-    hiddenLockedHint: '개발자가 본능처럼 누르는 그 키 한 번. 모바일이면 이 카드를 1초 꾹 눌러봐요.',
+    hiddenLockedHint: '개발자가 본능처럼 누르는 그 키 한 번. 모바일이면 이 카드를 10초 꾹 눌러봐요.',
     showExtraHint: '힌트 보기',
     hideExtraHint: '힌트 접기',
     extraHint: '패치노트에 히든 미션 달성법이 적혀있어요.',
@@ -29,6 +29,7 @@ const dict = {
     launchFireworks: '🎆 미션 달성 폭죽 터트리기',
     darkModeTitleOn: '밤 모드로 옷 갈아입기',
     darkModeTitleOff: '다시 낮으로 돌아가기',
+    darkModeHintOff: '이미 밤 모드로 보고 계시네요. 같은 버튼으로 다시 밝게 바꿀 수 있어요.',
   },
   en: {
     progressLabel: 'completed',
@@ -36,7 +37,7 @@ const dict = {
     pendingTag: 'Pending',
     hiddenTag: 'Hidden',
     hiddenLockedTitle: '???',
-    hiddenLockedHint: 'The key developers reach for on instinct. On mobile, press and hold this card for 1 second.',
+    hiddenLockedHint: 'The key developers reach for on instinct. On mobile, press and hold this card for 10 seconds.',
     showExtraHint: 'Show hint',
     hideExtraHint: 'Hide hint',
     extraHint: 'The patch notes describe how to unlock hidden missions.',
@@ -48,6 +49,7 @@ const dict = {
     launchFireworks: '🎆 Launch celebration fireworks',
     darkModeTitleOn: 'Slip into night mode',
     darkModeTitleOff: 'Step back into daylight',
+    darkModeHintOff: 'Already in dark mode. The same button switches you back to the light.',
   },
   zh: {
     progressLabel: '已完成',
@@ -55,7 +57,7 @@ const dict = {
     pendingTag: '未完成',
     hiddenTag: '隐藏',
     hiddenLockedTitle: '???',
-    hiddenLockedHint: '开发者顺手就按的那个键。手机上则按住这张卡片 1 秒钟。',
+    hiddenLockedHint: '开发者顺手就按的那个键。手机上则按住这张卡片 10 秒钟。',
     showExtraHint: '查看提示',
     hideExtraHint: '收起提示',
     extraHint: '补丁说明里写着隐藏任务的达成方式。',
@@ -67,6 +69,7 @@ const dict = {
     launchFireworks: '🎆 庆祝烟花',
     darkModeTitleOn: '换上夜间装扮',
     darkModeTitleOff: '回到白天',
+    darkModeHintOff: '已经是夜间模式了。同一个按钮可以切换回明亮模式。',
   },
   ja: {
     progressLabel: '達成',
@@ -74,7 +77,7 @@ const dict = {
     pendingTag: '未達成',
     hiddenTag: '隠し',
     hiddenLockedTitle: '???',
-    hiddenLockedHint: '開発者が思わず押すあのキーをひと押し。モバイルではこのカードを 1 秒押したままに。',
+    hiddenLockedHint: '開発者が思わず押すあのキーをひと押し。モバイルではこのカードを 10 秒押したままに。',
     showExtraHint: 'ヒントを見る',
     hideExtraHint: 'ヒントを閉じる',
     extraHint: 'パッチノートに隠しミッションの達成方法が書かれています。',
@@ -86,6 +89,7 @@ const dict = {
     launchFireworks: '🎆 ミッション達成花火',
     darkModeTitleOn: '夜モードに着替える',
     darkModeTitleOff: '昼に戻る',
+    darkModeHintOff: 'すでに夜モードです。同じボタンで明るい画面に戻れます。',
   },
 } as const;
 
@@ -307,7 +311,7 @@ function MissionCard({
     longPressTimer.current = setTimeout(() => {
       completeMission('discover-f12');
       setIsPressing(false);
-    }, 1000);
+    }, 10000);
   }
   function cancelLongPress() {
     if (longPressTimer.current) {
@@ -327,6 +331,9 @@ function MissionCard({
     : mission.hint[lang];
 
   let hintNode: React.ReactNode = baseHint;
+  if (mission.id === 'toggle-dark-mode' && !masked && isDark) {
+    hintNode = t.darkModeHintOff;
+  }
   if (mission.id === 'find-mission-page' && !done && countdown != null) {
     const secondsText =
       lang === 'ko'

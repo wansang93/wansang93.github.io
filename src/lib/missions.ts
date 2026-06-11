@@ -76,7 +76,7 @@ export const MISSIONS: Mission[] = [
       ja: 'プロジェクトの引き出しを開く',
     },
     hint: {
-      ko: '카테고리별로 옛 작업물이 정리돼 있어요. 내가 어떤 길을 걸어왔는지 흔적을 따라가 보세요.',
+      ko: '카테고리별로 옛 작업물이 정리돼 있어요. 블로그 주인이 어떤 길을 걸어왔는지 흔적을 따라가 보세요.',
       en: 'Past work is shelved by category. Follow the trail and see which road I walked.',
       zh: '过去的作品按类别整齐摆放。沿着痕迹走一走,看看我曾经走过的路。',
       ja: '過去の作品がカテゴリごとに並んでいます。足跡をたどって、私が歩いてきた道を見てください。',
@@ -106,16 +106,16 @@ export const MISSIONS: Mission[] = [
       ja: '秘密のキーをひと押し',
     },
     hint: {
-      ko: '개발자가 입버릇처럼 누르는 그 키를 한 번. 모바일이라면 이 카드를 1초 꾹 눌러봐요. 새로운 시각이 열려요.',
-      en: 'Press the key developers reach for instinctively. On mobile, press and hold this card for 1 second instead — a new view opens.',
-      zh: '试试开发者顺手就按的那个键。手机上则按住这张卡片 1 秒钟 —— 一扇新视角的门会打开。',
-      ja: '開発者が思わず押すあのキーを。モバイルではこのカードを 1 秒押したままに —— 新しい視点が開きます。',
+      ko: '개발자가 입버릇처럼 누르는 그 키를 한 번. 모바일이라면 이 카드를 10초 꾹 눌러봐요.',
+      en: 'Press the key developers reach for instinctively. On mobile, press and hold this card for 10 seconds instead.',
+      zh: '试试开发者顺手就按的那个键。手机上则按住这张卡片 10 秒钟。',
+      ja: '開発者が思わず押すあのキーを。モバイルではこのカードを 10 秒押したままに。',
     },
     lockedHint: {
-      ko: '개발자가 본능처럼 누르는 그 키 한 번. 모바일이면 이 카드를 1초 꾹 눌러봐요.',
-      en: 'The key developers reach for on instinct. On mobile, press and hold this card for 1 second.',
-      zh: '开发者顺手就按的那个键。手机上则按住这张卡片 1 秒钟。',
-      ja: '開発者が思わず押すあのキーをひと押し。モバイルではこのカードを 1 秒押したままに。',
+      ko: '개발자가 본능처럼 누르는 그 키 한 번. 모바일이면 이 카드를 10초 꾹 눌러봐요.',
+      en: 'The key developers reach for on instinct. On mobile, press and hold this card for 10 seconds.',
+      zh: '开发者顺手就按的那个键。手机上则按住这张卡片 10 秒钟。',
+      ja: '開発者が思わず押すあのキーをひと押し。モバイルではこのカードを 10 秒押したままに。',
     },
     hidden: true,
   },
@@ -181,11 +181,12 @@ export function completeMission(id: MissionId) {
   if (state[id]) return false;
   state[id] = true;
   writeStore(state);
+  const completedTotal = MISSIONS.filter((m) => state[m.id]).length;
   const completedHidden = MISSIONS.filter((m) => m.hidden && state[m.id]).length;
   const totalHidden = MISSIONS.filter((m) => m.hidden).length;
   window.dispatchEvent(
     new CustomEvent('missions:unlocked', {
-      detail: { id, completedHidden, totalHidden },
+      detail: { id, completedTotal, completedHidden, totalHidden },
     })
   );
   return true;
