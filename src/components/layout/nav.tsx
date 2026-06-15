@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
-const LOGO_ORIGINAL = 'wansang93';
-const SLOT_CHARS = 'abcdefghijklmnopqrstuvwxyz0123456789';
+const LOGO_ORIGINAL = '93';
+const SLOT_CHARS = '0123456789';
 
 type CharState = { text: string; settleKey: number };
 import { detectLang, prefixed, type Lang } from '@/lib/i18n';
@@ -174,23 +174,21 @@ export function Nav() {
       <nav className="mx-auto max-w-3xl px-6 h-16 flex items-center justify-between">
         <Link
           href={prefixed('/', lang)}
-          className={`font-serif text-lg font-semibold tracking-tight${logoFlash ? ' logo-rainbow' : ''}`}
+          className="text-lg font-semibold tracking-tight"
         >
+          <span className="font-serif">wansang</span>
           {charStates !== null ? (
             charStates.map((s, i) => (
               <span
                 key={s.settleKey > 0 ? `s${i}-${s.settleKey}` : `c${i}`}
-                className={s.settleKey > 0 ? 'char-settle' : ''}
+                className={`text-accent${s.settleKey > 0 ? ' char-settle' : ''}`}
                 style={{ display: 'inline-block' }}
               >
                 {s.text}
               </span>
             ))
           ) : (
-            <>
-              wansang
-              <span className={logoFlash ? '' : 'text-accent'}>93</span>
-            </>
+            <span className={logoFlash ? 'logo-rainbow' : 'text-accent'}>93</span>
           )}
         </Link>
 
