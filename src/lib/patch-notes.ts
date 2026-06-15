@@ -12,6 +12,42 @@ export type PatchNote = {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: 'v0.008',
+    date: '2026.06.15',
+    title: {
+      ko: '설정 페이지 + 로고 인터랙션',
+      en: 'Settings page + logo interactions',
+      zh: '设置页面 + Logo 交互动效',
+      ja: '設定ページ + ロゴインタラクション',
+    },
+    details: {
+      ko: [
+        '하단 풋터에 "설정" 메뉴가 생겼어요 — 폰트와 강조색을 취향에 맞게 바꿀 수 있습니다',
+        '강조색은 검정·와인·오렌지·개나리·하늘 5가지 프리셋, 랜덤 추천, 직접 선택 중 고를 수 있어요',
+        '색상을 바꾸면 헤더 로고에 무지개 빛이 잠깐 흐르고, 폰트를 바꾸면 글자가 슬롯머신처럼 한 번 돌아요',
+        '미션 5개의 제목과 힌트 문구를 더 자연스럽게 전면 재작성했어요',
+      ],
+      en: [
+        'A "Settings" link is now in the footer — choose your preferred font and accent color',
+        'Accent color comes with 5 presets (black, wine, orange, forsythia yellow, sky blue), a random pick, or a custom color',
+        'Changing the color flashes a rainbow sweep on the header logo; changing the font spins it like a slot machine',
+        'All 5 mission titles and hints have been rewritten to feel more natural',
+      ],
+      zh: [
+        '页脚新增「设置」入口 —— 可以自由选择字体和强调色',
+        '强调色提供 5 种预设（黑色、酒红、橙色、迎春黄、天蓝），以及随机推荐和自定义选项',
+        '更换颜色时，顶部 logo 会短暂闪过彩虹渐变；更换字体时，字母会像老虎机一样滚动一下',
+        '5 个任务的标题和提示文案已全面改写，读起来更自然',
+      ],
+      ja: [
+        'フッターに「設定」リンクが追加 —— フォントとアクセントカラーを好みに合わせて変更できます',
+        'アクセントカラーは 5 種類のプリセット（ブラック・ワイン・オレンジ・イエロー・スカイ）+ ランダム推薦 + カスタムから選べます',
+        'カラーを変えるとヘッダーロゴに虹色がさっと流れ、フォントを変えると文字がスロットマシンのように回ります',
+        '5 つのミッションのタイトルとヒント文言をすべて書き直し、より自然な表現に',
+      ],
+    },
+  },
+  {
     version: 'v0.007',
     date: '2026.06.11',
     title: {

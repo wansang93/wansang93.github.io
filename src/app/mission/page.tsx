@@ -1,4 +1,4 @@
-import { MissionList } from '@/components/mission-list';
+import { MissionList } from '@/components/mission/mission-list';
 
 export const metadata = { title: 'Mission' };
 

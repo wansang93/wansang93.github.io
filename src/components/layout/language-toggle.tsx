@@ -31,7 +31,7 @@ export function LanguageToggle() {
     <div ref={ref} className="relative">
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => { setOpen((v) => !v); completeMission('toggle-language'); }}
         aria-expanded={open}
         aria-haspopup="true"
         aria-label={LANG_LABEL[current]}
@@ -48,10 +48,7 @@ export function LanguageToggle() {
               <li key={lang}>
                 <Link
                   href={toLangPath(pathname, lang)}
-                  onClick={() => {
-                    setOpen(false);
-                    if (!isCurrent) completeMission('toggle-language');
-                  }}
+                  onClick={() => setOpen(false)}
                   aria-current={isCurrent ? 'true' : undefined}
                   className={`flex items-center justify-between px-3 py-2 transition-colors ${
                     isCurrent ? 'text-fg bg-border/40' : 'text-muted hover:text-fg hover:bg-border/40'

@@ -1,4 +1,4 @@
-import AboutTabs from '@/components/about-tabs';
+import AboutTabs from '@/components/about/about-tabs';
 
 export const metadata = { title: '소개' };
 

@@ -169,6 +169,22 @@ export const SEARCH_ITEMS: SearchItem[] = [
       return `${intro[l]} ${patchBody[l]}`;
     }),
   },
+  {
+    href: '/settings/',
+    title: { ko: '설정', en: 'Settings', zh: '设置', ja: '設定' },
+    description: {
+      ko: '글꼴 · 화면 표시 설정',
+      en: 'Font · display preferences',
+      zh: '字体 · 显示设置',
+      ja: 'フォント · 表示設定',
+    },
+    body: {
+      ko: '설정. 글꼴 변경. 전체 페이지에 적용되는 기본 글꼴을 선택합니다. Pretendard Inter Fraunces System. 사이트 표시 방식을 취향에 맞게 조정하세요.',
+      en: 'Settings. Change font. Choose the default font applied across the entire site. Pretendard Inter Fraunces System. Adjust how the site looks to suit your preference.',
+      zh: '设置。更改字体。选择应用于整个页面的默认字体。Pretendard Inter Fraunces System。根据您的喜好调整网站的显示方式。',
+      ja: '設定。フォント変更。サイト全体に適用されるデフォルトフォントを選択します。Pretendard Inter Fraunces System。サイトの表示方法をお好みに合わせて調整できます。',
+    },
+  },
 ];
 
 const SNIPPET_BEFORE = 30;

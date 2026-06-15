@@ -3,6 +3,11 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+
+const LOGO_ORIGINAL = 'wansang93';
+const SLOT_CHARS = 'abcdefghijklmnopqrstuvwxyz0123456789';
+
+type CharState = { text: string; settleKey: number };
 import { detectLang, prefixed, type Lang } from '@/lib/i18n';
 import { completeMission } from '@/lib/missions';
 // Note: discover-f12 hidden mission is triggered by F12 (window keydown, see MissionTracker)
@@ -70,6 +75,55 @@ export function Nav() {
   const lang = detectLang(pathname);
   const t = dict[lang];
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [logoFlash, setLogoFlash] = useState(false);
+  const [charStates, setCharStates] = useState<CharState[] | null>(null);
+  const fontAnimRun = useRef(0);
+
+  useEffect(() => {
+    function onAccentChange() {
+      setLogoFlash(true);
+      const t = setTimeout(() => setLogoFlash(false), 900);
+      return () => clearTimeout(t);
+    }
+    window.addEventListener('accent-changed', onAccentChange);
+    return () => window.removeEventListener('accent-changed', onAccentChange);
+  }, []);
+
+  useEffect(() => {
+    function onFontChange() {
+      const runId = ++fontAnimRun.current;
+      const origChars = LOGO_ORIGINAL.split('');
+      const CYCLES = 8;
+      const CYCLE_MS = 90;
+
+      setCharStates(origChars.map((ch) => ({ text: ch, settleKey: 0 })));
+
+      for (let c = 0; c < CYCLES; c++) {
+        setTimeout(() => {
+          if (fontAnimRun.current !== runId) return;
+          setCharStates((prev) => {
+            if (!prev) return null;
+            return prev.map((s) => ({
+              ...s,
+              text: SLOT_CHARS[Math.floor(Math.random() * SLOT_CHARS.length)],
+            }));
+          });
+        }, c * CYCLE_MS);
+      }
+
+      setTimeout(() => {
+        if (fontAnimRun.current !== runId) return;
+        setCharStates(origChars.map((ch) => ({ text: ch, settleKey: 1 })));
+      }, CYCLES * CYCLE_MS);
+
+      setTimeout(() => {
+        if (fontAnimRun.current !== runId) return;
+        setCharStates(null);
+      }, CYCLES * CYCLE_MS + 300);
+    }
+    window.addEventListener('font-changed', onFontChange);
+    return () => window.removeEventListener('font-changed', onFontChange);
+  }, []);
 
   useEffect(() => {
     document.documentElement.lang = lang;
@@ -120,10 +174,24 @@ export function Nav() {
       <nav className="mx-auto max-w-3xl px-6 h-16 flex items-center justify-between">
         <Link
           href={prefixed('/', lang)}
-          className="font-serif text-lg font-semibold tracking-tight"
+          className={`font-serif text-lg font-semibold tracking-tight${logoFlash ? ' logo-rainbow' : ''}`}
         >
-          wansang
-          <span className="text-accent">93</span>
+          {charStates !== null ? (
+            charStates.map((s, i) => (
+              <span
+                key={s.settleKey > 0 ? `s${i}-${s.settleKey}` : `c${i}`}
+                className={s.settleKey > 0 ? 'char-settle' : ''}
+                style={{ display: 'inline-block' }}
+              >
+                {s.text}
+              </span>
+            ))
+          ) : (
+            <>
+              wansang
+              <span className={logoFlash ? '' : 'text-accent'}>93</span>
+            </>
+          )}
         </Link>
 
         <ul className="hidden sm:flex items-center gap-1 text-sm">

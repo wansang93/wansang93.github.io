@@ -8,18 +8,22 @@ const dict = {
   ko: {
     mission: '미션',
     patchNotes: '패치노트',
+    settings: '설정',
   },
   en: {
     mission: 'Mission',
     patchNotes: 'Patch notes',
+    settings: 'Settings',
   },
   zh: {
     mission: '任务',
     patchNotes: '补丁说明',
+    settings: '设置',
   },
   ja: {
     mission: 'ミッション',
     patchNotes: 'パッチノート',
+    settings: '設定',
   },
 } as const;
 
@@ -76,6 +80,11 @@ export function Footer() {
             <li>
               <Link href={prefixed('/patch-notes/', lang)} className="hover:text-fg transition-colors">
                 {t.patchNotes}
+              </Link>
+            </li>
+            <li>
+              <Link href={prefixed('/settings/', lang)} className="hover:text-fg transition-colors">
+                {t.settings}
               </Link>
             </li>
           </ul>

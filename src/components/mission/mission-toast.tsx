@@ -17,6 +17,7 @@ const dict = {
     introBadge: '🎉 첫 미션 달성!',
     introBody: '사이트 곳곳에 미션이 숨겨져 있어요.',
     goMissions: '미션 보러 가기 →',
+    moreMissions: '미션 더보기 →',
   },
   en: {
     achieved: 'Mission complete',
@@ -24,6 +25,7 @@ const dict = {
     introBadge: '🎉 First mission!',
     introBody: 'More missions are hidden around the site.',
     goMissions: 'See all missions →',
+    moreMissions: 'See all missions →',
   },
   zh: {
     achieved: '任务达成',
@@ -31,6 +33,7 @@ const dict = {
     introBadge: '🎉 首个任务达成!',
     introBody: '网站各处还藏着更多任务。',
     goMissions: '查看任务页面 →',
+    moreMissions: '查看任务 →',
   },
   ja: {
     achieved: 'ミッション達成',
@@ -38,11 +41,12 @@ const dict = {
     introBadge: '🎉 はじめてのミッション達成!',
     introBody: 'サイトのあちこちにミッションが隠れています。',
     goMissions: 'ミッションページへ →',
+    moreMissions: 'ミッションを見る →',
   },
 } as const;
 
 type Dict = (typeof dict)[keyof typeof dict];
-type Toast = { id: number; title: string; intro: boolean };
+type Toast = { id: number; title: string; intro: boolean; body?: string };
 
 export function MissionToast() {
   const pathname = usePathname() || '/';
@@ -56,12 +60,17 @@ export function MissionToast() {
 
   useEffect(() => {
     function onUnlocked(e: Event) {
-      const detail = (e as CustomEvent<{ id: string; completedTotal: number }>).detail;
+      const detail = (e as CustomEvent<{ id: string; completedTotal: number; meta?: Record<string, unknown> }>).detail;
       const mission = MISSIONS.find((m) => m.id === detail?.id);
-      if (!mission) return;
+      if (!mission || mission.hidden) return;
       const id = Date.now() + Math.floor(Math.random() * 1000);
-      const intro = detail.completedTotal === 1;
-      setToasts((ts) => [...ts, { id, title: mission.title[lang], intro }]);
+      let title = mission.title[lang];
+      if (detail.meta?.isDark === false && mission.popupHeadlineLight) {
+        title = mission.popupHeadlineLight[lang] ?? title;
+      }
+      const body = mission.popupBody?.[lang];
+      const intro = detail.completedTotal === 1 && !body;
+      setToasts((ts) => [...ts, { id, title, intro, body }]);
     }
     window.addEventListener('missions:unlocked', onUnlocked);
     return () => window.removeEventListener('missions:unlocked', onUnlocked);
@@ -98,7 +107,7 @@ function ToastItem({
   t: Dict;
   missionHref: string;
 }) {
-  const visibleMs = toast.intro ? INTRO_MS : VISIBLE_MS;
+  const visibleMs = (toast.intro || toast.body) ? INTRO_MS : VISIBLE_MS;
   const [leaving, setLeaving] = useState(false);
   const [paused, setPaused] = useState(false);
   const remainingRef = useRef(visibleMs);
@@ -148,7 +157,7 @@ function ToastItem({
 
   return (
     <div
-      className={`pointer-events-auto rounded-lg border border-border bg-bg shadow-lg overflow-hidden max-w-full ${toast.intro ? 'w-80' : 'w-72'}`}
+      className={`pointer-events-auto rounded-lg border border-border bg-bg shadow-lg overflow-hidden max-w-full ${(toast.intro || toast.body) ? 'w-80' : 'w-72'}`}
       style={{
         animation: leaving
           ? `toast-out ${FADE_MS}ms ease-in forwards`
@@ -164,7 +173,10 @@ function ToastItem({
         <div
           className="h-full bg-accent origin-left"
           style={{
-            animation: leaving ? 'none' : `toast-progress ${visibleMs}ms linear forwards`,
+            animationName: leaving ? 'none' : 'toast-progress',
+            animationDuration: `${visibleMs}ms`,
+            animationTimingFunction: 'linear',
+            animationFillMode: 'forwards',
             animationPlayState: paused ? 'paused' : 'running',
           }}
         />
@@ -193,7 +205,18 @@ function ToastItem({
             </svg>
           </button>
         </div>
-        {toast.intro && (
+        {toast.body ? (
+          <div className="mt-3 flex items-center justify-between gap-2">
+            <p className="text-xs text-muted">{toast.body}</p>
+            <Link
+              href={missionHref}
+              onClick={dismiss}
+              className="shrink-0 text-xs font-medium text-accent hover:opacity-80 transition-opacity whitespace-nowrap"
+            >
+              {t.moreMissions}
+            </Link>
+          </div>
+        ) : toast.intro ? (
           <div className="mt-3 flex items-center justify-between gap-2">
             <p className="text-xs text-muted">{t.introBody}</p>
             <Link
@@ -202,6 +225,16 @@ function ToastItem({
               className="shrink-0 text-xs font-medium text-accent hover:opacity-80 transition-opacity whitespace-nowrap"
             >
               {t.goMissions}
+            </Link>
+          </div>
+        ) : (
+          <div className="mt-2">
+            <Link
+              href={missionHref}
+              onClick={dismiss}
+              className="text-xs font-medium text-accent hover:opacity-80 transition-opacity"
+            >
+              {t.moreMissions}
             </Link>
           </div>
         )}

@@ -6,6 +6,8 @@ import {
   completeMission,
   resetMission,
   useMissions,
+  useMissionsActive,
+  setMissionsActive,
   type Mission,
 } from '@/lib/missions';
 import type { Lang } from '@/lib/i18n';
@@ -17,19 +19,23 @@ const dict = {
     pendingTag: '미완료',
     hiddenTag: '히든',
     hiddenLockedTitle: '???',
-    hiddenLockedHint: '개발자가 본능처럼 누르는 그 키 한 번. 모바일이면 이 카드를 10초 꾹 눌러봐요.',
+    hiddenLockedHint: '웹 개발자라면 누르는 버튼이에요. 모바일이라면 이 카드를 5초 꾹 눌러봐요.',
     showExtraHint: '힌트 보기',
     hideExtraHint: '힌트 접기',
     extraHint: '패치노트에 히든 미션 달성법이 적혀있어요.',
     reset: '미션 초기화',
     cardReset: '클릭해서 초기화',
     empty: '아직 미션이 없습니다.',
+    activateTitle: '미션이 꺼져 있어요',
+    activateDesc: '활성화하면 사이트를 탐험하며 미션을 달성할 수 있어요. 히든 미션은 항상 발동됩니다.',
+    activateBtn: '미션 활성화',
+    deactivateBtn: '미션 비활성화',
     sectionMain: '페이지 100% 즐기기',
     sectionHidden: '히든 미션',
     launchFireworks: '🎆 미션 달성 폭죽 터트리기',
-    darkModeTitleOn: '밤 모드로 옷 갈아입기',
-    darkModeTitleOff: '다시 낮으로 돌아가기',
-    darkModeHintOff: '이미 밤 모드로 보고 계시네요. 같은 버튼으로 다시 밝게 바꿀 수 있어요.',
+    darkModeTitleOn: '어둠으로 들어가기',
+    darkModeTitleOff: '빛으로 들어가기',
+    darkModeHintOff: '화면 모드 버튼을 다시 눌러 밝은 화면으로 돌아가 보세요.',
   },
   en: {
     progressLabel: 'completed',
@@ -37,19 +43,23 @@ const dict = {
     pendingTag: 'Pending',
     hiddenTag: 'Hidden',
     hiddenLockedTitle: '???',
-    hiddenLockedHint: 'The key developers reach for on instinct. On mobile, press and hold this card for 10 seconds.',
+    hiddenLockedHint: 'The key developers reach for instinctively. On mobile, press and hold this card for 5 seconds.',
     showExtraHint: 'Show hint',
     hideExtraHint: 'Hide hint',
     extraHint: 'The patch notes describe how to unlock hidden missions.',
     reset: 'Reset missions',
     cardReset: 'Click to reset',
     empty: 'No missions yet.',
+    activateTitle: 'Missions are off',
+    activateDesc: 'Activate to earn missions as you explore the site. Hidden missions always fire.',
+    activateBtn: 'Activate missions',
+    deactivateBtn: 'Deactivate missions',
     sectionMain: 'Make the most of the site',
     sectionHidden: 'Hidden missions',
     launchFireworks: '🎆 Launch celebration fireworks',
-    darkModeTitleOn: 'Slip into night mode',
-    darkModeTitleOff: 'Step back into daylight',
-    darkModeHintOff: 'Already in dark mode. The same button switches you back to the light.',
+    darkModeTitleOn: 'Enter the darkness',
+    darkModeTitleOff: 'Return to the light',
+    darkModeHintOff: 'Press the theme button again to switch back to the light screen.',
   },
   zh: {
     progressLabel: '已完成',
@@ -57,19 +67,23 @@ const dict = {
     pendingTag: '未完成',
     hiddenTag: '隐藏',
     hiddenLockedTitle: '???',
-    hiddenLockedHint: '开发者顺手就按的那个键。手机上则按住这张卡片 10 秒钟。',
+    hiddenLockedHint: '试试开发者顺手就按的那个键。手机上则按住这张卡片 5 秒钟。',
     showExtraHint: '查看提示',
     hideExtraHint: '收起提示',
     extraHint: '补丁说明里写着隐藏任务的达成方式。',
     reset: '重置任务',
     cardReset: '点击重置',
     empty: '暂无任务。',
+    activateTitle: '任务已关闭',
+    activateDesc: '激活后，探索网站时即可完成任务。隐藏任务始终有效。',
+    activateBtn: '激活任务',
+    deactivateBtn: '关闭任务',
     sectionMain: '充分体验本站',
     sectionHidden: '隐藏任务',
     launchFireworks: '🎆 庆祝烟花',
-    darkModeTitleOn: '换上夜间装扮',
-    darkModeTitleOff: '回到白天',
-    darkModeHintOff: '已经是夜间模式了。同一个按钮可以切换回明亮模式。',
+    darkModeTitleOn: '步入黑暗',
+    darkModeTitleOff: '回归光明',
+    darkModeHintOff: '再次点击模式按钮，即可回到亮色界面。',
   },
   ja: {
     progressLabel: '達成',
@@ -77,24 +91,27 @@ const dict = {
     pendingTag: '未達成',
     hiddenTag: '隠し',
     hiddenLockedTitle: '???',
-    hiddenLockedHint: '開発者が思わず押すあのキーをひと押し。モバイルではこのカードを 10 秒押したままに。',
+    hiddenLockedHint: '開発者が思わず押すあのキーをひと押し。モバイルではこのカードを 5 秒押したままに。',
     showExtraHint: 'ヒントを見る',
     hideExtraHint: 'ヒントを閉じる',
     extraHint: 'パッチノートに隠しミッションの達成方法が書かれています。',
     reset: 'ミッションをリセット',
     cardReset: 'クリックでリセット',
     empty: 'まだミッションはありません。',
+    activateTitle: 'ミッションはオフです',
+    activateDesc: '有効にするとサイトを探索しながらミッションを達成できます。隠しミッションは常に有効です。',
+    activateBtn: 'ミッションを有効にする',
+    deactivateBtn: 'ミッションを無効にする',
     sectionMain: 'サイトを100%楽しむ',
     sectionHidden: '隠しミッション',
     launchFireworks: '🎆 ミッション達成花火',
-    darkModeTitleOn: '夜モードに着替える',
-    darkModeTitleOff: '昼に戻る',
-    darkModeHintOff: 'すでに夜モードです。同じボタンで明るい画面に戻れます。',
+    darkModeTitleOn: '暗闇へ踏み込む',
+    darkModeTitleOff: '光の中へ戻る',
+    darkModeHintOff: '画面モードボタンをもう一度押して、明るい画面に戻りましょう。',
   },
 } as const;
 
 type Dict = (typeof dict)[Lang];
-
 type SectionHint = { show: string; hide: string; body: string };
 
 const FIND_PAGE_DURATION = 7;
@@ -102,6 +119,7 @@ const FIND_PAGE_DURATION = 7;
 export function MissionList({ lang }: { lang: Lang }) {
   const t = dict[lang];
   const { state, reset } = useMissions();
+  const missionsActive = useMissionsActive();
   const [findCountdown, setFindCountdown] = useState<number | null>(null);
 
   useEffect(() => {
@@ -131,27 +149,17 @@ export function MissionList({ lang }: { lang: Lang }) {
       }, FIND_PAGE_DURATION * 1000);
     }
 
-    function onActivity() {
-      startTimer();
-    }
-
     startTimer();
 
     const events: (keyof WindowEventMap)[] = [
-      'mousemove',
-      'mousedown',
-      'keydown',
-      'wheel',
-      'scroll',
-      'touchstart',
-      'touchmove',
+      'mousemove', 'mousedown', 'keydown', 'wheel', 'scroll', 'touchstart', 'touchmove',
     ];
-    events.forEach((ev) => window.addEventListener(ev, onActivity, { passive: true }));
+    events.forEach((ev) => window.addEventListener(ev, startTimer, { passive: true }));
 
     return () => {
       window.clearInterval(interval);
       window.clearTimeout(timer);
-      events.forEach((ev) => window.removeEventListener(ev, onActivity));
+      events.forEach((ev) => window.removeEventListener(ev, startTimer));
     };
   }, [state]);
 
@@ -163,6 +171,34 @@ export function MissionList({ lang }: { lang: Lang }) {
 
   return (
     <div className="space-y-8">
+      {/* 활성화 토글 */}
+      {!missionsActive ? (
+        <div className="rounded-xl border border-border bg-fg/[0.02] p-5 flex flex-col sm:flex-row sm:items-center gap-4">
+          <div className="flex-1">
+            <p className="font-semibold text-fg text-sm">{t.activateTitle}</p>
+            <p className="text-xs text-muted mt-1 leading-relaxed">{t.activateDesc}</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setMissionsActive(true)}
+            className="shrink-0 px-4 py-2 rounded-lg bg-accent text-white text-sm font-medium hover:opacity-90 transition-opacity self-start sm:self-auto"
+          >
+            {t.activateBtn}
+          </button>
+        </div>
+      ) : (
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-accent font-medium">● {lang === 'ko' ? '미션 진행 중' : lang === 'zh' ? '任务进行中' : lang === 'ja' ? 'ミッション進行中' : 'Missions active'}</span>
+          <button
+            type="button"
+            onClick={() => setMissionsActive(false)}
+            className="text-xs text-muted hover:text-fg transition-colors"
+          >
+            {t.deactivateBtn}
+          </button>
+        </div>
+      )}
+
       <div className="flex items-center justify-between text-sm">
         <p className="text-muted">
           {done} / {total} {t.progressLabel}
@@ -311,7 +347,7 @@ function MissionCard({
     longPressTimer.current = setTimeout(() => {
       completeMission('discover-f12');
       setIsPressing(false);
-    }, 10000);
+    }, 5000);
   }
   function cancelLongPress() {
     if (longPressTimer.current) {
@@ -331,21 +367,24 @@ function MissionCard({
     : mission.hint[lang];
 
   let hintNode: React.ReactNode = baseHint;
-  if (mission.id === 'toggle-dark-mode' && !masked && isDark) {
-    hintNode = t.darkModeHintOff;
+  if (!done) {
+    if (mission.id === 'toggle-dark-mode' && !masked && isDark) {
+      hintNode = t.darkModeHintOff;
+    }
+  } else {
+    if (mission.id === 'toggle-dark-mode') {
+      hintNode = (isDark ? mission.popupBodyDark?.[lang] : mission.popupBodyLight?.[lang]) ?? baseHint;
+    } else if (mission.completedHint) {
+      hintNode = mission.completedHint[lang];
+    }
   }
   if (mission.id === 'find-mission-page' && !done && countdown != null) {
     const secondsText =
-      lang === 'ko'
-        ? `${countdown}초`
-        : lang === 'zh'
-          ? `${countdown}秒`
-          : lang === 'ja'
-            ? `${countdown}秒`
-            : `${countdown} seconds`;
-    const seconds = (
-      <span className="text-accent font-medium tabular-nums">{secondsText}</span>
-    );
+      lang === 'ko' ? `${countdown}초`
+      : lang === 'zh' ? `${countdown}秒`
+      : lang === 'ja' ? `${countdown}秒`
+      : `${countdown} seconds`;
+    const seconds = <span className="text-accent font-medium tabular-nums">{secondsText}</span>;
     if (lang === 'ko') {
       hintNode = <>{seconds} 정도만 더 머무르면 자동으로 클리어. 그 사이 다른 미션도 한 번 훑어봐요.</>;
     } else if (lang === 'zh') {
@@ -370,11 +409,12 @@ function MissionCard({
           : masked
             ? 'border-dashed border-border bg-border/10'
             : 'border-border'
-      } ${
-        longPressEnabled ? 'cursor-pointer select-none touch-manipulation' : ''
-      } ${isPressing ? 'scale-[0.98] bg-accent/10' : ''}`}
+      } ${longPressEnabled ? 'cursor-pointer select-none touch-manipulation' : ''} ${
+        isPressing ? 'scale-[0.98] bg-accent/10' : ''
+      }`}
     >
       <div className="flex items-start gap-4">
+        {/* 완료 체크 / 미완료 원 */}
         {done ? (
           isPersistent ? (
             <span
@@ -413,13 +453,10 @@ function MissionCard({
             )}
           </span>
         )}
+
         <div className="flex-1 min-w-0">
           <div className="flex items-baseline justify-between gap-3 flex-wrap">
-            <h3
-              className={`font-serif text-lg font-semibold ${
-                masked ? 'text-muted tracking-widest' : ''
-              }`}
-            >
+            <h3 className={`font-serif text-lg font-semibold ${masked ? 'text-muted tracking-widest' : ''}`}>
               {title}
             </h3>
             <span className={`text-[10px] uppercase tracking-widest ${done ? 'text-accent' : 'text-muted'}`}>

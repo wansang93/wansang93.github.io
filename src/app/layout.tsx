@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
 import { Inter, Fraunces, JetBrains_Mono } from 'next/font/google';
 import localFont from 'next/font/local';
-import { Nav } from '@/components/nav';
-import { Footer } from '@/components/footer';
-import { MissionTracker } from '@/components/mission-tracker';
-import { MissionToast } from '@/components/mission-toast';
-import { ScrollEndMission } from '@/components/scroll-end-mission';
-import { ScrollProgress } from '@/components/scroll-progress';
-import { Fireworks } from '@/components/fireworks';
+import { Nav } from '@/components/layout/nav';
+import { Footer } from '@/components/layout/footer';
+import { MissionTracker } from '@/components/mission/mission-tracker';
+import { MissionToast } from '@/components/mission/mission-toast';
+import { ScrollEndMission } from '@/components/mission/scroll-end-mission';
+import { ScrollProgress } from '@/components/layout/scroll-progress';
+import { Fireworks } from '@/components/effects/fireworks';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
@@ -34,6 +34,30 @@ export const metadata: Metadata = {
     type: 'website',
   },
 };
+
+const accentInitScript = `
+  (function() {
+    try {
+      var al = localStorage.getItem('accent-light');
+      var ad = localStorage.getItem('accent-dark');
+      if (al && ad) {
+        function h(x) { return parseInt(x,16); }
+        function toRgb(s) { return h(s.slice(1,3))+' '+h(s.slice(3,5))+' '+h(s.slice(5,7)); }
+        document.documentElement.style.setProperty('--accent-light', toRgb(al));
+        document.documentElement.style.setProperty('--accent-dark', toRgb(ad));
+      }
+    } catch (e) {}
+  })();
+`;
+
+const fontInitScript = `
+  (function() {
+    try {
+      var f = localStorage.getItem('font');
+      if (f && f !== 'pretendard') document.documentElement.dataset.font = f;
+    } catch (e) {}
+  })();
+`;
 
 const themeInitScript = `
   (function() {
@@ -62,6 +86,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko" className={`${pretendard.variable} ${inter.variable} ${fraunces.variable} ${jetbrains.variable}`} suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: accentInitScript }} />
+        <script dangerouslySetInnerHTML={{ __html: fontInitScript }} />
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <script dangerouslySetInnerHTML={{ __html: langInitScript }} />
       </head>

@@ -9,7 +9,7 @@ export function ThemeToggle() {
     try {
       localStorage.setItem('theme', next ? 'dark' : 'light');
     } catch {}
-    completeMission('toggle-dark-mode');
+    completeMission('toggle-dark-mode', { isDark: next });
   }
 
   return (

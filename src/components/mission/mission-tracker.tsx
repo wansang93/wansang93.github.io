@@ -69,6 +69,7 @@ export function MissionTracker() {
   const t = dict[lang];
   const [mode, setMode] = useState<Mode | null>(null);
   const [progress, setProgress] = useState({ completed: 0, total: 0 });
+  const [completedId, setCompletedId] = useState<string | null>(null);
 
   const close = useCallback(() => setMode(null), []);
 
@@ -85,6 +86,7 @@ export function MissionTracker() {
       const completed = MISSIONS.find((m) => m.id === detail?.id);
       if (completed?.hidden) {
         setProgress({ completed: detail.completedHidden, total: detail.totalHidden });
+        setCompletedId(detail.id ?? null);
         setMode('hidden');
       }
     }
@@ -104,6 +106,10 @@ export function MissionTracker() {
 
   if (!mode) return null;
 
+  const completedMission = MISSIONS.find((m) => m.id === completedId);
+  const customHeadline = completedMission?.popupHeadline?.[lang];
+  const customBody = completedMission?.popupBody?.[lang];
+
   return (
     <div
       role="dialog"
@@ -118,12 +124,12 @@ export function MissionTracker() {
       >
         <p className="text-xs uppercase tracking-widest text-accent">{t.hiddenBadge}</p>
         <h2 id="mission-modal-title" className="mt-2 font-serif text-2xl font-semibold leading-snug">
-          {t.hiddenHeadline(ordinal(progress.completed, lang))}
+          {customHeadline ?? t.hiddenHeadline(ordinal(progress.completed, lang))}
         </h2>
         <p className="mt-2 font-mono text-xs text-muted">
           {t.hiddenProgress(progress.completed, progress.total)}
         </p>
-        <p className="mt-3 text-sm text-muted leading-relaxed">{t.hiddenBody}</p>
+        <p className="mt-3 text-sm text-muted leading-relaxed">{customBody ?? t.hiddenBody}</p>
         <div className="mt-6 flex items-center justify-end gap-2">
           <button
             type="button"

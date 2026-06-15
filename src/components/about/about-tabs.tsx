@@ -126,7 +126,13 @@ function CareerTimeline({ lang, onScrolled }: { lang: Lang; onScrolled?: () => v
   };
 
   function scrollToSection(barType: string) {
-    document.getElementById(SECTION_IDS[barType])?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const el = document.getElementById(SECTION_IDS[barType]);
+    if (el) {
+      const top = el.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+      el.classList.add('section-arrive');
+      setTimeout(() => el.classList.remove('section-arrive'), 1500);
+    }
     onScrolled?.();
   }
 
@@ -435,38 +441,22 @@ function ResumeTab({ lang }: { lang: Lang }) {
           <h2 className="font-serif text-xl font-semibold">{t ? '경력' : 'Work Experience'}</h2>
           <span className="text-sm text-muted">{totalCareerDuration(lang)}</span>
         </div>
-        <div className="space-y-6">
-          <div className="flex flex-col sm:flex-row gap-1 sm:gap-6">
-            <div className="shrink-0 w-full sm:w-36">
-              <div className="flex items-baseline gap-2 flex-wrap">
-                <p className="text-sm text-muted">2022.07 — {t ? '현재' : 'Present'}</p>
-                <p className="text-xs text-accent">{calcDuration('2022-07-15', null, lang)}</p>
-              </div>
+        <div className="space-y-4">
+          <div>
+            <div className="flex items-baseline justify-between gap-x-4 flex-wrap">
+              <p className="font-semibold text-fg">NDS</p>
+              <p className="text-xs text-muted whitespace-nowrap">2022.07 — {t ? '현재' : 'Present'} <span className="text-accent">{calcDuration('2022-07-15', null, lang)}</span></p>
             </div>
-            <div className="flex-1">
-              <p className="font-semibold text-fg">NDS {t ? '(농심데이타시스템)' : '(Nongshim Data Systems)'}</p>
-              <p className="text-sm text-muted mb-1">{t ? '클라우드기술팀 · 매니저' : 'Cloud Technology Team · Manager'}</p>
-              <ul className="text-sm text-fg/80 space-y-0.5 list-disc list-inside">
-                <li>{t ? '사내 시스템 빌링 개발' : 'In-house system billing development'}</li>
-                <li>{t ? '사내 테크블로그 개발 및 운영' : 'Tech blog development & operations'}</li>
-                <li>{t ? '사내 JIRA 서버 운영' : 'JIRA server administration'}</li>
-                <li>{t ? '사내 영업관리 대시보드 개발' : 'Sales management dashboard development'}</li>
-                <li>{t ? '대외사업 구축 (AWS Cloud, Data Pipeline, BI)' : 'External project delivery (AWS Cloud, Data Pipeline, BI)'}</li>
-              </ul>
-            </div>
+            <p className="text-sm text-muted">{t ? '클라우드기술팀 · 매니저' : 'Cloud Technology Team · Manager'}</p>
+            <p className="text-sm text-fg/80">{t ? 'AWS Infra·Data Pipeline·DW·BI 대외구축, 사내 빌링·테크블로그·JIRA·영업대시보드 개발' : 'AWS infra, data pipelines, DW/BI delivery; in-house billing, tech blog, JIRA, sales dashboard'}</p>
           </div>
-          <div className="flex flex-col sm:flex-row gap-1 sm:gap-6">
-            <div className="shrink-0 w-full sm:w-36">
-              <div className="flex items-baseline gap-2 flex-wrap">
-                <p className="text-sm text-muted">2021.08 — 2021.12</p>
-                <p className="text-xs text-accent">{calcDuration('2021-08-26', '2021-12-07', lang, true)}</p>
-              </div>
-            </div>
-            <div className="flex-1">
+          <div>
+            <div className="flex items-baseline justify-between gap-x-4 flex-wrap">
               <p className="font-semibold text-fg">Maven Cloud Service</p>
-              <p className="text-sm text-muted mb-1">{t ? 'PowerPlatform · 프로' : 'PowerPlatform · Pro'}</p>
-              <p className="text-sm text-fg/80">{t ? '자동화 업무 담당' : 'Automation projects'}</p>
+              <p className="text-xs text-muted whitespace-nowrap">2021.08 — 2021.12 <span className="text-accent">{calcDuration('2021-08-26', '2021-12-07', lang, true)}</span></p>
             </div>
+            <p className="text-sm text-muted">{t ? 'PowerPlatform · 프로' : 'PowerPlatform · Pro'}</p>
+            <p className="text-sm text-fg/80">{t ? 'Microsoft Power Automate 기반 업무 자동화 솔루션 구축' : 'Business automation solutions with Microsoft Power Automate'}</p>
           </div>
         </div>
       </section>
@@ -474,30 +464,20 @@ function ResumeTab({ lang }: { lang: Lang }) {
       {/* 학력 */}
       <section id="resume-school">
         <h2 className="font-serif text-xl font-semibold mb-4 pb-2 border-b border-border">{t ? '학력' : 'Education'}</h2>
-        <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row gap-1 sm:gap-6">
-            <div className="shrink-0 w-full sm:w-36">
-              <div className="flex items-baseline gap-2 flex-wrap">
-                <p className="text-sm text-muted">2012.03 — 2019.02</p>
-                <p className="text-xs text-accent">{calcDuration('2012-03-02', '2019-02-22', lang, true)}</p>
-              </div>
-            </div>
-            <div>
+        <div className="space-y-3">
+          <div>
+            <div className="flex items-baseline justify-between gap-x-4 flex-wrap">
               <p className="font-semibold text-fg">{t ? '홍익대학교' : 'Hongik University'}</p>
-              <p className="text-sm text-muted">{t ? '컴퓨터정보통신공학과 · 학사 졸업' : 'B.E. Computer Information & Communication Engineering'}</p>
+              <p className="text-xs text-muted whitespace-nowrap">2012.03 — 2019.02 <span className="text-accent">{calcDuration('2012-03-02', '2019-02-22', lang, true)}</span></p>
             </div>
+            <p className="text-sm text-muted">{t ? '컴퓨터정보통신공학과 · 학사 졸업' : 'B.E. Computer Information & Communication Engineering'}</p>
           </div>
-          <div className="flex flex-col sm:flex-row gap-1 sm:gap-6">
-            <div className="shrink-0 w-full sm:w-36">
-              <div className="flex items-baseline gap-2 flex-wrap">
-                <p className="text-sm text-muted">2009.03 — 2012.02</p>
-                <p className="text-xs text-accent">{calcDuration('2009-03-02', '2012-02-09', lang, true)}</p>
-              </div>
-            </div>
-            <div>
+          <div>
+            <div className="flex items-baseline justify-between gap-x-4 flex-wrap">
               <p className="font-semibold text-fg">{t ? '안곡고등학교' : 'Angok High School'}</p>
-              <p className="text-sm text-muted">{t ? '인문계 · 졸업' : 'Liberal Arts · Graduated'}</p>
+              <p className="text-xs text-muted whitespace-nowrap">2009.03 — 2012.02 <span className="text-accent">{calcDuration('2009-03-02', '2012-02-09', lang, true)}</span></p>
             </div>
+            <p className="text-sm text-muted">{t ? '인문계 · 졸업' : 'Liberal Arts · Graduated'}</p>
           </div>
         </div>
       </section>
@@ -507,30 +487,20 @@ function ResumeTab({ lang }: { lang: Lang }) {
         <h2 className="font-serif text-xl font-semibold mb-4 pb-2 border-b border-border">
           {t ? '인턴 및 아르바이트' : 'Internships & Part-time'}
         </h2>
-        <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row gap-1 sm:gap-6">
-            <div className="shrink-0 w-full sm:w-36">
-              <div className="flex items-baseline gap-2 flex-wrap">
-                <p className="text-sm text-muted">2023.10 — 2023.11</p>
-                <p className="text-xs text-accent">{calcDuration('2023-10-16', '2023-11-03', lang, true)}</p>
-              </div>
-            </div>
-            <div>
+        <div className="space-y-3">
+          <div>
+            <div className="flex items-baseline justify-between gap-x-4 flex-wrap">
               <p className="font-semibold text-fg">{t ? '에듀니티랩 (이노베이션 아카데미 외주)' : 'Edunity Lab (Innovation Academy outsourcing)'}</p>
-              <p className="text-sm text-muted">{t ? 'Seoul42 Java 과정 전문가 문제 검증' : 'Seoul42 Java curriculum expert problem validation'}</p>
+              <p className="text-xs text-muted whitespace-nowrap">2023.10 — 2023.11 <span className="text-accent">{calcDuration('2023-10-16', '2023-11-03', lang, true)}</span></p>
             </div>
+            <p className="text-sm text-muted">{t ? 'Seoul42 Java 과정 전문가 문제 검증' : 'Seoul42 Java curriculum expert problem validation'}</p>
           </div>
-          <div className="flex flex-col sm:flex-row gap-1 sm:gap-6">
-            <div className="shrink-0 w-full sm:w-36">
-              <div className="flex items-baseline gap-2 flex-wrap">
-                <p className="text-sm text-muted">2018.12 — 2019.01</p>
-                <p className="text-xs text-accent">{calcDuration('2018-12-17', '2019-01-18', lang, true)}</p>
-              </div>
-            </div>
-            <div>
+          <div>
+            <div className="flex items-baseline justify-between gap-x-4 flex-wrap">
               <p className="font-semibold text-fg">{t ? '세종특별자치시청 보안관제센터' : 'Sejong City Security Operations Center'}</p>
-              <p className="text-sm text-muted">{t ? '보안 관제 인턴 (체험형)' : 'Security monitoring intern'}</p>
+              <p className="text-xs text-muted whitespace-nowrap">2018.12 — 2019.01 <span className="text-accent">{calcDuration('2018-12-17', '2019-01-18', lang, true)}</span></p>
             </div>
+            <p className="text-sm text-muted">{t ? '보안 관제 인턴 (체험형)' : 'Security monitoring intern'}</p>
           </div>
         </div>
       </section>
@@ -538,17 +508,12 @@ function ResumeTab({ lang }: { lang: Lang }) {
       {/* 병역 */}
       <section id="resume-military">
         <h2 className="font-serif text-xl font-semibold mb-4 pb-2 border-b border-border">{t ? '병역' : 'Military Service'}</h2>
-        <div className="flex flex-col sm:flex-row gap-1 sm:gap-6">
-          <div className="shrink-0 w-full sm:w-36">
-            <div className="flex items-baseline gap-2 flex-wrap">
-              <p className="text-sm text-muted">2014.04 — 2016.01</p>
-              <p className="text-xs text-accent">{calcDuration('2014-04-01', '2016-01-01', lang)}</p>
-            </div>
-          </div>
-          <div>
+        <div>
+          <div className="flex items-baseline justify-between gap-x-4 flex-wrap">
             <p className="font-semibold text-fg">{t ? '대한민국 육군' : 'Republic of Korea Army'}</p>
-            <p className="text-sm text-muted">{t ? '25사단 수색대대 · 병장 만기전역' : '25th Division Reconnaissance Battalion · Sergeant, Honorable Discharge'}</p>
+            <p className="text-xs text-muted whitespace-nowrap">2014.04 — 2016.01 <span className="text-accent">{calcDuration('2014-04-01', '2016-01-01', lang)}</span></p>
           </div>
+          <p className="text-sm text-muted">{t ? '25사단 수색대대 · 병장 만기전역' : '25th Division Reconnaissance Battalion · Sergeant, Honorable Discharge'}</p>
         </div>
       </section>
 
@@ -558,42 +523,27 @@ function ResumeTab({ lang }: { lang: Lang }) {
           <h2 className="font-serif text-xl font-semibold">{t ? '교육' : 'Training'}</h2>
           <span className="text-sm text-muted">{totalEduDuration(lang)}</span>
         </div>
-        <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row gap-1 sm:gap-6">
-            <div className="shrink-0 w-full sm:w-36">
-              <div className="flex items-baseline gap-2 flex-wrap">
-                <p className="text-sm text-muted">2022.01 — 2022.07</p>
-                <p className="text-xs text-accent">{calcDuration('2022-01-05', '2022-07-14', lang, true)}</p>
-              </div>
-            </div>
-            <div>
+        <div className="space-y-3">
+          <div>
+            <div className="flex items-baseline justify-between gap-x-4 flex-wrap">
               <p className="font-semibold text-fg">{t ? '삼성 청년 소프트웨어 아카데미 (SSAFY)' : 'Samsung SW Academy For Youth (SSAFY)'}</p>
-              <p className="text-sm text-muted">Java, Algorithm, Spring, Vue (1,000{t ? '시간' : 'hrs'})</p>
+              <p className="text-xs text-muted whitespace-nowrap">2022.01 — 2022.07 <span className="text-accent">{calcDuration('2022-01-05', '2022-07-14', lang, true)}</span></p>
             </div>
+            <p className="text-sm text-muted">Java, Algorithm, Spring, Vue (1,000{t ? '시간' : 'hrs'})</p>
           </div>
-          <div className="flex flex-col sm:flex-row gap-1 sm:gap-6">
-            <div className="shrink-0 w-full sm:w-36">
-              <div className="flex items-baseline gap-2 flex-wrap">
-                <p className="text-sm text-muted">2020.12 — 2021.06</p>
-                <p className="text-xs text-accent">{calcDuration('2020-12-28', '2021-06-04', lang, true)}</p>
-              </div>
-            </div>
-            <div>
+          <div>
+            <div className="flex items-baseline justify-between gap-x-4 flex-wrap">
               <p className="font-semibold text-fg">{t ? '프로젝트형 클라우드(MSA) 서비스 개발' : 'Cloud (MSA) Service Development'}</p>
-              <p className="text-sm text-muted">HTML, CSS, JS, Django, React, AWS, Docker, Kubernetes (880{t ? '시간' : 'hrs'})</p>
+              <p className="text-xs text-muted whitespace-nowrap">2020.12 — 2021.06 <span className="text-accent">{calcDuration('2020-12-28', '2021-06-04', lang, true)}</span></p>
             </div>
+            <p className="text-sm text-muted">HTML, CSS, JS, Django, React, AWS, Docker, Kubernetes (880{t ? '시간' : 'hrs'})</p>
           </div>
-          <div className="flex flex-col sm:flex-row gap-1 sm:gap-6">
-            <div className="shrink-0 w-full sm:w-36">
-              <div className="flex items-baseline gap-2 flex-wrap">
-                <p className="text-sm text-muted">2019.04 — 2019.11</p>
-                <p className="text-xs text-accent">{calcDuration('2019-04-22', '2019-11-27', lang, true)}</p>
-              </div>
-            </div>
-            <div>
+          <div>
+            <div className="flex items-baseline justify-between gap-x-4 flex-wrap">
               <p className="font-semibold text-fg">{t ? '빅데이터 활용(딥러닝) AI 설계' : 'Big Data & Deep Learning AI Design'}</p>
-              <p className="text-sm text-muted">Python, Azure, R, TensorFlow, Keras, Computer Vision (1,184{t ? '시간' : 'hrs'})</p>
+              <p className="text-xs text-muted whitespace-nowrap">2019.04 — 2019.11 <span className="text-accent">{calcDuration('2019-04-22', '2019-11-27', lang, true)}</span></p>
             </div>
+            <p className="text-sm text-muted">Python, Azure, R, TensorFlow, Keras, Computer Vision (1,184{t ? '시간' : 'hrs'})</p>
           </div>
         </div>
       </section>
@@ -601,39 +551,30 @@ function ResumeTab({ lang }: { lang: Lang }) {
       {/* 해외 경험 */}
       <section id="resume-abroad">
         <h2 className="font-serif text-xl font-semibold mb-4 pb-2 border-b border-border">{t ? '해외 경험' : 'International Experience'}</h2>
-        <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row gap-1 sm:gap-6">
-            <div className="shrink-0 w-full sm:w-36">
-              <div className="flex items-baseline gap-2 flex-wrap">
-                <p className="text-sm text-muted">2017.03 — 2018.02</p>
-                <p className="text-xs text-accent">{calcDuration('2017-03-01', '2018-02-01', lang)}</p>
-              </div>
-            </div>
-            <div>
+        <div className="space-y-3">
+          <div>
+            <div className="flex items-baseline justify-between gap-x-4 flex-wrap">
               <p className="font-semibold text-fg">{t ? '호주 워킹홀리데이' : 'Australia Working Holiday'}</p>
-              <p className="text-sm text-muted">NSW Goulburn → NSW Sydney → NT Uluru → VIC Melbourne → TAS Hobart</p>
+              <p className="text-xs text-muted whitespace-nowrap">2017.03 — 2018.02 <span className="text-accent">{calcDuration('2017-03-01', '2018-02-01', lang)}</span></p>
             </div>
+            <p className="text-sm text-muted">NSW Goulburn → NSW Sydney → NT Uluru → VIC Melbourne → TAS Hobart</p>
           </div>
-          <div className="flex flex-col sm:flex-row gap-1 sm:gap-6">
-            <div className="shrink-0 w-full sm:w-36">
-              <div className="flex items-baseline gap-2 flex-wrap">
-                <p className="text-sm text-muted">2019.01 — 2019.03</p>
-                <p className="text-xs text-accent">{calcDuration('2019-01-27', '2019-03-26', lang, true)}</p>
-              </div>
-            </div>
-            <div>
+          <div>
+            <div className="flex items-baseline justify-between gap-x-4 flex-wrap">
               <p className="font-semibold text-fg">{t ? '호주 여행' : 'Australia Travel'}</p>
-              <p className="text-sm text-muted">SA Adelaide → Kangaroo Island</p>
+              <p className="text-xs text-muted whitespace-nowrap">2019.01 — 2019.03 <span className="text-accent">{calcDuration('2019-01-27', '2019-03-26', lang, true)}</span></p>
             </div>
+            <p className="text-sm text-muted">SA Adelaide → Kangaroo Island</p>
           </div>
         </div>
       </section>
 
       {/* 자격증 */}
       <section>
-        <h2 className="font-serif text-xl font-semibold mb-4 pb-2 border-b border-border">
-          {t ? '자격증' : 'Certifications'}
-        </h2>
+        <div className="flex items-center gap-2 mb-4 pb-2 border-b border-border">
+          <h2 className="font-serif text-xl font-semibold">{t ? '자격증' : 'Certifications'}</h2>
+          <span className="text-sm text-muted">{CERTS.length}{t ? '개' : ' total'}</span>
+        </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm border-collapse">
             <thead>
@@ -666,8 +607,28 @@ function ResumeTab({ lang }: { lang: Lang }) {
         <h2 className="font-serif text-xl font-semibold mb-4 pb-2 border-b border-border">
           {t ? '어학' : 'Language'}
         </h2>
-        <div className="text-sm text-fg/80">
-          <p>TOEIC Speaking Level 5 (120{t ? '점' : ' pts'}) — 2020.03.22</p>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm border-collapse">
+            <thead>
+              <tr className="text-left text-muted border-b border-border">
+                <th className="pb-2 pr-4 font-medium">{t ? '시험명' : 'Test'}</th>
+                <th className="pb-2 pr-4 font-medium hidden sm:table-cell">{t ? '발급기관' : 'Issuer'}</th>
+                <th className="pb-2 pr-4 font-medium">{t ? '등급/점수' : 'Score'}</th>
+                <th className="pb-2 font-medium">{t ? '취득일' : 'Issued'}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-border/50">
+                <td className="py-2 pr-4">
+                  <span className="font-medium text-fg">TOEIC Speaking</span>
+                  <span className="block text-xs text-muted leading-snug">Test of English for International Communication</span>
+                </td>
+                <td className="py-2 pr-4 text-muted hidden sm:table-cell">ETS</td>
+                <td className="py-2 pr-4 text-muted whitespace-nowrap">Level 5 (120{t ? '점' : ' pts'})</td>
+                <td className="py-2 text-muted whitespace-nowrap">2020.03.22</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
     {/* Floating back button */}
@@ -683,7 +644,7 @@ function ResumeTab({ lang }: { lang: Lang }) {
         }}
         className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-fg text-bg text-sm font-medium shadow-lg hover:opacity-90 active:scale-95 transition-all"
       >
-        ↑ {t ? '타임라인으로' : 'Back to timeline'}
+        ↑ {t ? '돌아가기' : 'Back to timeline'}
       </button>
     </div>
     </div>
@@ -761,10 +722,10 @@ function AdTab({ lang }: { lang: Lang }) {
       <div className="rounded-xl border border-border p-5 flex flex-col sm:flex-row sm:items-center gap-3">
         <div className="flex-1">
           <p className="font-semibold text-fg">{t ? '협업·문의' : 'Get in touch'}</p>
-          <p className="text-sm text-muted">ezreal@nongshim.co.kr</p>
+          <p className="text-sm text-muted">wansang93@naver.com</p>
         </div>
         <a
-          href="mailto:ezreal@nongshim.co.kr"
+          href="mailto:wansang93@naver.com"
           className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-accent text-white text-sm font-medium hover:opacity-90 transition-opacity self-start sm:self-auto"
         >
           {t ? '이메일 보내기' : 'Send Email'}
@@ -826,34 +787,37 @@ function PhotoTab() {
   );
 }
 
+type TabId = 'resume' | 'ad' | 'photo';
+
 export default function AboutTabs({ lang }: Props) {
   const t = lang === 'ko';
-  const tabs = [
+  const tabs: { id: TabId; label: string }[] = [
     { id: 'resume', label: t ? '이력서' : 'Resume' },
     { id: 'ad', label: 'PPT' },
-  ] as const;
+    { id: 'photo', label: t ? '사진첩' : 'Photos' },
+  ];
 
-  const [active, setActive] = useState<'resume' | 'ad'>('resume');
+  const [active, setActive] = useState<TabId>('resume');
 
   // URL 쿼리스트링에서 초기 탭 읽기
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const tab = params.get('tab');
-    if (tab === 'resume' || tab === 'ad') setActive(tab);
+    const tab = params.get('tab') as TabId | null;
+    if (tab === 'resume' || tab === 'ad' || tab === 'photo') setActive(tab);
   }, []);
 
   // 브라우저 뒤로가기/앞으로가기 대응
   useEffect(() => {
     const onPop = () => {
       const params = new URLSearchParams(window.location.search);
-      const tab = params.get('tab');
-      setActive(tab === 'resume' || tab === 'ad' ? tab : 'resume');
+      const tab = params.get('tab') as TabId | null;
+      setActive(tab === 'resume' || tab === 'ad' || tab === 'photo' ? tab : 'resume');
     };
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
   }, []);
 
-  const handleTabChange = (tabId: 'resume' | 'ad') => {
+  const handleTabChange = (tabId: TabId) => {
     setActive(tabId);
     const url = new URL(window.location.href);
     url.searchParams.set('tab', tabId);
@@ -885,6 +849,7 @@ export default function AboutTabs({ lang }: Props) {
       {/* Tab content */}
       {active === 'resume' && <ResumeTab lang={lang} />}
       {active === 'ad' && <AdTab lang={lang} />}
+      {active === 'photo' && <PhotoTab />}
     </div>
   );
 }
