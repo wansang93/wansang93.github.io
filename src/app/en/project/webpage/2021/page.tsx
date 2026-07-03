@@ -10,11 +10,11 @@ export default function Webpage2021En() {
           <Link href="/en/project/" className="hover:text-fg">
             Project
           </Link>{' '}
-          /{' '}
+          {'>'}{' '}
           <Link href="/en/project/webpage/" className="hover:text-fg">
             Webpage
           </Link>{' '}
-          / 2021
+          {'>'} 2021
         </p>
         <h1 className="mt-2 font-serif text-4xl font-semibold tracking-tight">
           My first homepage

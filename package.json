@@ -3,13 +3,17 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "predev": "node scripts/generate-photos.js",
     "dev": "next dev",
+    "prebuild": "node scripts/generate-photos.js",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@fontsource/jua": "^5.2.8",
+    "@fontsource/noto-sans-kr": "^5.2.9",
     "@mdx-js/loader": "^3.1.0",
     "@mdx-js/react": "^3.1.0",
     "@next/mdx": "^15.0.3",

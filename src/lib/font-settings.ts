@@ -1,20 +1,20 @@
 'use client';
 import { useState, useEffect } from 'react';
 
-export type FontId = 'pretendard' | 'inter' | 'fraunces' | 'system';
+export type FontId = 'pretendard' | 'noto-sans-kr' | 'suit' | 'jua';
 
 export const FONT_OPTIONS: { id: FontId; name: string }[] = [
   { id: 'pretendard', name: 'Pretendard' },
-  { id: 'inter', name: 'Inter' },
-  { id: 'fraunces', name: 'Fraunces' },
-  { id: 'system', name: 'System' },
+  { id: 'noto-sans-kr', name: 'Noto Sans KR' },
+  { id: 'suit', name: 'SUIT' },
+  { id: 'jua', name: '배민 주아체' },
 ];
 
 export const FONT_STACK: Record<FontId, string> = {
   pretendard: 'var(--font-pretendard), var(--font-inter), ui-sans-serif, system-ui, sans-serif',
-  inter: 'var(--font-inter), ui-sans-serif, system-ui, sans-serif',
-  fraunces: 'var(--font-fraunces), ui-serif, Georgia, serif',
-  system: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+  'noto-sans-kr': "'Noto Sans KR', ui-sans-serif, system-ui, sans-serif",
+  suit: 'var(--font-suit), ui-sans-serif, system-ui, sans-serif',
+  jua: "'Jua', ui-sans-serif, system-ui, sans-serif",
 };
 
 const STORAGE_KEY = 'font';

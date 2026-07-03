@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { Inter, Fraunces, JetBrains_Mono } from 'next/font/google';
 import localFont from 'next/font/local';
 import { Nav } from '@/components/layout/nav';
@@ -8,6 +9,9 @@ import { MissionToast } from '@/components/mission/mission-toast';
 import { ScrollEndMission } from '@/components/mission/scroll-end-mission';
 import { ScrollProgress } from '@/components/layout/scroll-progress';
 import { Fireworks } from '@/components/effects/fireworks';
+import '@fontsource/noto-sans-kr/400.css';
+import '@fontsource/noto-sans-kr/700.css';
+import '@fontsource/jua/400.css';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
@@ -19,6 +23,13 @@ const pretendard = localFont({
   display: 'swap',
   weight: '45 920',
   preload: true,
+});
+const suit = localFont({
+  src: '../../public/fonts/SUIT-Variable.woff2',
+  variable: '--font-suit',
+  display: 'swap',
+  weight: '100 900',
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -82,14 +93,24 @@ const langInitScript = `
   })();
 `;
 
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko" className={`${pretendard.variable} ${inter.variable} ${fraunces.variable} ${jetbrains.variable}`} suppressHydrationWarning>
+    <html lang="ko" className={`${pretendard.variable} ${suit.variable} ${inter.variable} ${fraunces.variable} ${jetbrains.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: accentInitScript }} />
         <script dangerouslySetInnerHTML={{ __html: fontInitScript }} />
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <script dangerouslySetInnerHTML={{ __html: langInitScript }} />
+        {ADSENSE_CLIENT && (
+          <script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
+            crossOrigin="anonymous"
+          />
+        )}
       </head>
       <body className="min-h-screen font-sans">
         <ScrollProgress />
@@ -100,6 +121,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <MissionToast />
         <Fireworks />
         <ScrollEndMission />
+        {GA_ID && (
+          <>
+            <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
+            <Script id="ga4-init" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_ID}');
+              `}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   );

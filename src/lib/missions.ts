@@ -285,6 +285,10 @@ export function getMissionState(): Record<string, boolean> {
   return readStore();
 }
 
+export function allMissionsCompleted(state: Record<string, boolean>): boolean {
+  return MISSIONS.every((m) => state[m.id]);
+}
+
 function readStore(): Record<string, boolean> {
   if (typeof window === 'undefined') return {};
   try {

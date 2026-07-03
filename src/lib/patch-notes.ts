@@ -12,6 +12,50 @@ export type PatchNote = {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: 'v0.009',
+    date: '2026.07.03',
+    title: {
+      ko: '사진첩 오픈 + 프로젝트 섹션 개편',
+      en: 'Photo album unlocked + project section revamp',
+      zh: '相册开放 + 项目板块改版',
+      ja: '写真集の解放 + プロジェクトセクション刷新',
+    },
+    details: {
+      ko: [
+        '소개 페이지의 사진첩은 이제 모든 미션을 완료해야 열려요 — 인스타그램처럼 정사각형으로 정리되고, 가로 사진은 위아래가 흐릿하게 채워집니다',
+        '홈 화면의 "프로젝트" 영역이 "준비 중" 문구 대신 실제 최신 프로젝트를 보여주도록 바뀌었어요',
+        '프로젝트 페이지 상단 경로 표시가 "프로젝트 / 웹페이지"에서 "프로젝트 > 웹페이지"로 바뀌어 더 헷갈리지 않아요',
+        '"기다림의 미학" 미션이 조건을 만족했는데도 안 깨지던 문제를 고쳤어요',
+        '모든 미션을 달성하면 나오는 버튼이 "축하하기"로 바뀌고, 옆에 사진첩으로 바로 이동하는 버튼이 추가됐어요',
+        '모바일 메뉴의 프로젝트 항목이 데스크탑과 똑같은 구성으로 정리됐어요',
+      ],
+      en: [
+        'The photo album on the About page now unlocks only after completing every mission — laid out in an Instagram-style square grid, with landscape photos softly blurred top and bottom',
+        'The homepage "Project" section now shows real, recent projects instead of a "coming soon" message',
+        'The breadcrumb on project pages now reads "Project > Webpage" instead of "Project / Webpage" for clarity',
+        'Fixed the "Art of Waiting" mission not completing even after meeting its condition',
+        'The button shown after completing every mission now says "Celebrate", with a new shortcut button next to it that jumps straight to the photo album',
+        'The Project item in the mobile menu now matches the desktop layout exactly',
+      ],
+      zh: [
+        '关于页面的相册现在需要完成全部任务才能打开 —— 以 Instagram 风格的方形网格排列，横向照片上下会做柔和的模糊处理',
+        '首页的「项目」板块不再显示"准备中"，而是展示真实的最新项目',
+        '项目页面顶部的路径提示从"项目 / 网页"改为"项目 > 网页"，更清晰',
+        '修复了"等待的美学"任务满足条件后仍无法完成的问题',
+        '完成全部任务后出现的按钮文案改为"庆祝一下"，旁边新增了直达相册的快捷按钮',
+        '手机端菜单里的项目菜单结构已与桌面端保持一致',
+      ],
+      ja: [
+        '自己紹介ページの写真集は、すべてのミッションを達成しないと開けなくなりました。Instagram のような正方形グリッドで並び、横長の写真は上下がやわらかくぼかされます',
+        'ホーム画面の「プロジェクト」欄が「準備中」の表示ではなく、実際の最新プロジェクトを表示するようになりました',
+        'プロジェクトページ上部のパンくずが「プロジェクト / ウェブページ」から「プロジェクト > ウェブページ」に変わり、わかりやすくなりました',
+        '「待つことの美学」ミッションが条件を満たしても完了しなかった不具合を修正しました',
+        '全ミッション達成後のボタンが「お祝いする」に変わり、隣に写真集へ直接移動できるボタンが追加されました',
+        'モバイルメニューのプロジェクト項目がデスクトップと同じ構成になりました',
+      ],
+    },
+  },
+  {
     version: 'v0.008',
     date: '2026.06.15',
     title: {

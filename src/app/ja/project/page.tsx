@@ -6,7 +6,12 @@ const categories = [
   {
     slug: 'webpage',
     title: 'ウェブページ',
-    description: '歴代の個人サイトのアーカイブ。',
+    description: 'ウェブページプロジェクト一覧。',
+  },
+  {
+    slug: 'dashboard',
+    title: 'データ/ダッシュボード',
+    description: 'データ分析・ダッシュボードプロジェクト。',
   },
 ];
 
@@ -23,10 +28,10 @@ export default function ProjectIndexJa() {
           <li key={c.slug}>
             <Link
               href={`/ja/project/${c.slug}/`}
-              className="block rounded-lg border border-border p-5 hover:border-accent hover:bg-border/20 transition-colors"
+              className="flex items-baseline gap-3 rounded-lg border border-border px-5 py-4 hover:border-accent hover:bg-border/20 transition-colors"
             >
-              <div className="font-serif text-xl font-semibold">{c.title}</div>
-              <p className="mt-1 text-sm text-muted">{c.description}</p>
+              <span className="font-serif text-xl font-semibold shrink-0">{c.title}</span>
+              <span className="text-sm text-muted truncate">{c.description}</span>
             </Link>
           </li>
         ))}

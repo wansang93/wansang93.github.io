@@ -31,9 +31,9 @@ const dict = {
 
 const SAMPLE: Record<string, string> = {
   pretendard: 'Aa 가나다',
-  inter: 'Aa Hello',
-  fraunces: 'Aa Serif',
-  system: 'Aa 시스템',
+  'noto-sans-kr': 'Aa 가나다',
+  suit: 'Aa 가나다',
+  jua: 'Aa 가나다',
 };
 
 export function FontPicker({ lang }: { lang: Lang }) {

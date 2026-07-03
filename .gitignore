@@ -31,6 +31,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# auto-generated from public/photos/ (scripts/generate-photos.js)
+/src/lib/photos.generated.json
+
 # editor
 .vscode/*
 !.vscode/settings.json

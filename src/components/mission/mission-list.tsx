@@ -1,6 +1,8 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
+import { prefixed } from '@/lib/i18n';
 import {
   MISSIONS,
   completeMission,
@@ -32,7 +34,8 @@ const dict = {
     deactivateBtn: '미션 비활성화',
     sectionMain: '페이지 100% 즐기기',
     sectionHidden: '히든 미션',
-    launchFireworks: '🎆 미션 달성 폭죽 터트리기',
+    launchFireworks: '🎆 축하하기',
+    photoShortcut: '🖼️ 사진첩 바로가기',
     darkModeTitleOn: '어둠으로 들어가기',
     darkModeTitleOff: '빛으로 들어가기',
     darkModeHintOff: '화면 모드 버튼을 다시 눌러 밝은 화면으로 돌아가 보세요.',
@@ -56,7 +59,8 @@ const dict = {
     deactivateBtn: 'Deactivate missions',
     sectionMain: 'Make the most of the site',
     sectionHidden: 'Hidden missions',
-    launchFireworks: '🎆 Launch celebration fireworks',
+    launchFireworks: '🎆 Fireworks',
+    photoShortcut: '🖼️ Go to photo album',
     darkModeTitleOn: 'Enter the darkness',
     darkModeTitleOff: 'Return to the light',
     darkModeHintOff: 'Press the theme button again to switch back to the light screen.',
@@ -80,7 +84,8 @@ const dict = {
     deactivateBtn: '关闭任务',
     sectionMain: '充分体验本站',
     sectionHidden: '隐藏任务',
-    launchFireworks: '🎆 庆祝烟花',
+    launchFireworks: '🎆 烟花',
+    photoShortcut: '🖼️ 前往相册',
     darkModeTitleOn: '步入黑暗',
     darkModeTitleOff: '回归光明',
     darkModeHintOff: '再次点击模式按钮，即可回到亮色界面。',
@@ -104,7 +109,8 @@ const dict = {
     deactivateBtn: 'ミッションを無効にする',
     sectionMain: 'サイトを100%楽しむ',
     sectionHidden: '隠しミッション',
-    launchFireworks: '🎆 ミッション達成花火',
+    launchFireworks: '🎆 花火',
+    photoShortcut: '🖼️ 写真集へ移動',
     darkModeTitleOn: '暗闇へ踏み込む',
     darkModeTitleOff: '光の中へ戻る',
     darkModeHintOff: '画面モードボタンをもう一度押して、明るい画面に戻りましょう。',
@@ -123,7 +129,7 @@ export function MissionList({ lang }: { lang: Lang }) {
   const [findCountdown, setFindCountdown] = useState<number | null>(null);
 
   useEffect(() => {
-    if (state['find-mission-page']) {
+    if (!missionsActive || state['find-mission-page']) {
       setFindCountdown(null);
       return;
     }
@@ -161,7 +167,7 @@ export function MissionList({ lang }: { lang: Lang }) {
       window.clearTimeout(timer);
       events.forEach((ev) => window.removeEventListener(ev, startTimer));
     };
-  }, [state]);
+  }, [state, missionsActive]);
 
   const done = MISSIONS.filter((m) => state[m.id]).length;
   const total = MISSIONS.length;
@@ -242,7 +248,13 @@ export function MissionList({ lang }: { lang: Lang }) {
       )}
 
       {allDone && (
-        <div className="pt-4 flex justify-center">
+        <div className="pt-4 flex flex-wrap justify-center gap-3">
+          <Link
+            href={`${prefixed('/about/', lang)}?tab=photo`}
+            className="px-5 py-3 rounded-lg border border-accent/40 bg-accent/10 text-fg hover:bg-accent/20 transition-colors text-sm font-medium"
+          >
+            {t.photoShortcut}
+          </Link>
           <button
             type="button"
             onClick={() => window.dispatchEvent(new CustomEvent('fireworks:trigger'))}

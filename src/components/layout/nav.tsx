@@ -22,6 +22,7 @@ type NavLabels = {
   project: string;
   about: string;
   webpage: string;
+  dashboard: string;
   all: (label: string) => string;
   menu: string;
   close: string;
@@ -34,6 +35,7 @@ const dict: Record<Lang, NavLabels> = {
     project: '프로젝트',
     about: '소개',
     webpage: '웹페이지',
+    dashboard: '데이터/대시보드',
     all: (label) => `${label} 전체`,
     menu: '메뉴 열기',
     close: '메뉴 닫기',
@@ -44,6 +46,7 @@ const dict: Record<Lang, NavLabels> = {
     project: 'Project',
     about: 'About',
     webpage: 'Webpage',
+    dashboard: 'Data/Dashboard',
     all: (label) => `All ${label}`,
     menu: 'Open menu',
     close: 'Close menu',
@@ -54,6 +57,7 @@ const dict: Record<Lang, NavLabels> = {
     project: '项目',
     about: '关于',
     webpage: '网页',
+    dashboard: '数据/仪表盘',
     all: (label) => `全部${label}`,
     menu: '打开菜单',
     close: '关闭菜单',
@@ -64,6 +68,7 @@ const dict: Record<Lang, NavLabels> = {
     project: 'プロジェクト',
     about: '自己紹介',
     webpage: 'ウェブページ',
+    dashboard: 'データ/ダッシュボード',
     all: (label) => `${label}一覧`,
     menu: 'メニューを開く',
     close: 'メニューを閉じる',
@@ -161,11 +166,8 @@ export function Nav() {
     label: t.project,
     href: prefixed('/project/', lang),
     groups: [
-      {
-        title: t.webpage,
-        href: prefixed('/project/webpage/', lang),
-        items: [{ label: '2021', href: prefixed('/project/webpage/2021/', lang) }],
-      },
+      { title: t.webpage, href: prefixed('/project/webpage/', lang) },
+      { title: t.dashboard, href: prefixed('/project/dashboard/', lang) },
     ],
   };
 
@@ -276,25 +278,13 @@ export function Nav() {
               </Link>
               <ul className="ml-3 pl-3 border-l border-border">
                 {projectMenu.groups.map((group) => (
-                  <li key={group.title} className="space-y-1">
+                  <li key={group.title}>
                     <Link
                       href={group.href}
                       className="block px-3 py-2 rounded-md text-xs uppercase tracking-wider text-muted hover:text-fg hover:bg-border/40 transition-colors"
                     >
                       {group.title}
                     </Link>
-                    <ul>
-                      {group.items.map((sub) => (
-                        <li key={sub.href}>
-                          <Link
-                            href={sub.href}
-                            className="block px-3 py-2 rounded-md hover:bg-border/40 transition-colors"
-                          >
-                            {sub.label}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
                   </li>
                 ))}
               </ul>
@@ -314,7 +304,7 @@ export function Nav() {
 type Menu = {
   label: string;
   href: string;
-  groups: { title: string; href: string; items: { label: string; href: string }[] }[];
+  groups: { title: string; href: string }[];
 };
 
 function DropdownMenu({ menu, allLabel }: { menu: Menu; allLabel: string }) {
@@ -371,36 +361,23 @@ function DropdownMenu({ menu, allLabel }: { menu: Menu; allLabel: string }) {
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-64 rounded-lg border border-border bg-bg shadow-lg overflow-hidden">
+        <div className="absolute right-0 mt-2 w-48 rounded-lg border border-border bg-bg shadow-lg overflow-hidden">
           <Link
             href={menu.href}
             onClick={() => setOpen(false)}
-            className="block px-4 py-3 text-sm font-medium border-b border-border hover:bg-border/40"
+            className="block px-3 py-2 text-xs font-medium border-b border-border hover:bg-border/40"
           >
             {allLabel}
           </Link>
           {menu.groups.map((group) => (
-            <div key={group.title} className="py-2">
+            <div key={group.title} className="py-0.5">
               <Link
                 href={group.href}
                 onClick={() => setOpen(false)}
-                className="block px-4 py-1 text-xs uppercase tracking-wider text-muted hover:text-fg"
+                className="block px-3 py-1.5 text-xs text-muted hover:text-fg hover:bg-border/40"
               >
                 {group.title}
               </Link>
-              <ul>
-                {group.items.map((sub) => (
-                  <li key={sub.href}>
-                    <Link
-                      href={sub.href}
-                      onClick={() => setOpen(false)}
-                      className="block px-4 py-2 text-sm hover:bg-border/40"
-                    >
-                      {sub.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
             </div>
           ))}
         </div>

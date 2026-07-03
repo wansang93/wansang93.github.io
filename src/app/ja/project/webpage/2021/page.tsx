@@ -10,11 +10,11 @@ export default function Webpage2021Ja() {
           <Link href="/ja/project/" className="hover:text-fg">
             プロジェクト
           </Link>{' '}
-          /{' '}
+          {'>'}{' '}
           <Link href="/ja/project/webpage/" className="hover:text-fg">
             ウェブページ
           </Link>{' '}
-          / 2021
+          {'>'} 2021
         </p>
         <h1 className="mt-2 font-serif text-4xl font-semibold tracking-tight">
           はじめてのホームページ

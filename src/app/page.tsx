@@ -1,6 +1,8 @@
 import Link from 'next/link';
+import { getRecentProjects } from '@/lib/projects';
 
 export default function HomePage() {
+  const projects = getRecentProjects(3);
   return (
     <div className="space-y-16">
       <section className="pt-12">
@@ -37,13 +39,28 @@ export default function HomePage() {
             전체 보기 →
           </Link>
         </div>
-        <div className="border border-dashed border-border rounded-lg p-10 text-center text-muted text-sm">
-          프로젝트 쇼케이스는 준비 중입니다. 지금은{' '}
-          <Link href="/project/webpage/2021/" className="underline hover:text-fg">
-            2021년 아카이브
-          </Link>
-          를 확인하실 수 있습니다.
-        </div>
+        {projects.length > 0 ? (
+          <ul className="space-y-3">
+            {projects.map((p) => (
+              <li key={p.href}>
+                <Link
+                  href={p.href}
+                  className="block rounded-lg border border-border p-5 hover:border-accent hover:bg-border/20 transition-colors"
+                >
+                  <div className="flex items-baseline justify-between gap-4">
+                    <div className="font-serif text-xl font-semibold">{p.title.ko}</div>
+                    <span className="text-xs text-muted">자세히 →</span>
+                  </div>
+                  <p className="mt-1 text-sm text-muted">{p.description.ko}</p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className="border border-dashed border-border rounded-lg p-10 text-center text-muted text-sm">
+            프로젝트 쇼케이스는 준비 중입니다.
+          </div>
+        )}
       </section>
     </div>
   );

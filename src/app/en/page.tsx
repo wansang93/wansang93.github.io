@@ -1,6 +1,9 @@
 import Link from 'next/link';
+import { getRecentProjects } from '@/lib/projects';
+import { prefixed } from '@/lib/i18n';
 
 export default function HomePageEn() {
+  const projects = getRecentProjects(3);
   return (
     <div className="space-y-16">
       <section className="pt-12">
@@ -37,13 +40,28 @@ export default function HomePageEn() {
             All projects →
           </Link>
         </div>
-        <div className="border border-dashed border-border rounded-lg p-10 text-center text-muted text-sm">
-          Project showcase coming. For now, see the{' '}
-          <Link href="/en/project/webpage/2021/" className="underline hover:text-fg">
-            2021 archive
-          </Link>
-          .
-        </div>
+        {projects.length > 0 ? (
+          <ul className="space-y-3">
+            {projects.map((p) => (
+              <li key={p.href}>
+                <Link
+                  href={prefixed(p.href, 'en')}
+                  className="block rounded-lg border border-border p-5 hover:border-accent hover:bg-border/20 transition-colors"
+                >
+                  <div className="flex items-baseline justify-between gap-4">
+                    <div className="font-serif text-xl font-semibold">{p.title.en}</div>
+                    <span className="text-xs text-muted">View →</span>
+                  </div>
+                  <p className="mt-1 text-sm text-muted">{p.description.en}</p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className="border border-dashed border-border rounded-lg p-10 text-center text-muted text-sm">
+            Project showcase coming soon.
+          </div>
+        )}
       </section>
     </div>
   );

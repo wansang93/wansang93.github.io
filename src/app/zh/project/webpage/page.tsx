@@ -5,8 +5,8 @@ export const metadata = { title: '项目 — 网页' };
 const versions = [
   {
     year: '2021',
-    title: '我的第一个个人主页',
-    description: '第一个版本。基于 Start Bootstrap Freelancer 主题的单页作品集。',
+    title: '2021 作品集',
+    description: '第一个个人作品集网站。基于 Bootstrap Freelancer 主题，2021 年 1 月制作。',
     href: '/zh/project/webpage/2021/',
   },
 ];
@@ -19,10 +19,10 @@ export default function WebpageIndexZh() {
           <Link href="/zh/project/" className="hover:text-fg">
             项目
           </Link>{' '}
-          / 网页
+          {'>'} 网页
         </p>
         <h1 className="mt-2 font-serif text-4xl font-semibold tracking-tight">网页</h1>
-        <p className="mt-3 text-muted">每年重建的个人网站,按版本存档。</p>
+        <p className="mt-3 text-muted">网页项目合集。</p>
       </header>
 
       <ul className="space-y-3">

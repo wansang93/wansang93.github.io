@@ -1,6 +1,9 @@
 import Link from 'next/link';
+import { getRecentProjects } from '@/lib/projects';
+import { prefixed } from '@/lib/i18n';
 
 export default function HomePageZh() {
+  const projects = getRecentProjects(3);
   return (
     <div className="space-y-16">
       <section className="pt-12">
@@ -37,13 +40,28 @@ export default function HomePageZh() {
             全部项目 →
           </Link>
         </div>
-        <div className="border border-dashed border-border rounded-lg p-10 text-center text-muted text-sm">
-          项目展示即将上线。目前可先查看{' '}
-          <Link href="/zh/project/webpage/2021/" className="underline hover:text-fg">
-            2021 年存档
-          </Link>
-          。
-        </div>
+        {projects.length > 0 ? (
+          <ul className="space-y-3">
+            {projects.map((p) => (
+              <li key={p.href}>
+                <Link
+                  href={prefixed(p.href, 'zh')}
+                  className="block rounded-lg border border-border p-5 hover:border-accent hover:bg-border/20 transition-colors"
+                >
+                  <div className="flex items-baseline justify-between gap-4">
+                    <div className="font-serif text-xl font-semibold">{p.title.zh}</div>
+                    <span className="text-xs text-muted">查看 →</span>
+                  </div>
+                  <p className="mt-1 text-sm text-muted">{p.description.zh}</p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className="border border-dashed border-border rounded-lg p-10 text-center text-muted text-sm">
+            项目展示即将上线。
+          </div>
+        )}
       </section>
     </div>
   );

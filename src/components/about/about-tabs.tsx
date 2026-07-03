@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { PHOTOS } from '@/lib/photos';
+import { MISSIONS, useMissions, allMissionsCompleted } from '@/lib/missions';
 
 type Lang = 'ko' | 'en';
 
@@ -735,30 +736,69 @@ function AdTab({ lang }: { lang: Lang }) {
   );
 }
 
-function PhotoTab() {
+function PhotoGridItem({ filename, onSelect }: { filename: string; onSelect: (filename: string) => void }) {
+  const [isLandscape, setIsLandscape] = useState(false);
+  const encodedName = encodeURIComponent(filename);
+  const src = `/photos/${encodedName}`;
+  return (
+    <button
+      className="group relative aspect-square block overflow-hidden rounded-lg bg-border/20 cursor-zoom-in focus:outline-none"
+      onClick={() => onSelect(filename)}
+      aria-label={filename}
+    >
+      {isLandscape && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={src}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover scale-110 blur-xl opacity-70"
+        />
+      )}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={src}
+        alt={filename}
+        className={`absolute inset-0 w-full h-full transition-transform duration-300 group-hover:scale-105 ${isLandscape ? 'object-contain' : 'object-cover'}`}
+        loading="lazy"
+        onLoad={(e) => {
+          const img = e.currentTarget;
+          setIsLandscape(img.naturalWidth > img.naturalHeight);
+        }}
+      />
+    </button>
+  );
+}
+
+function PhotoTab({ lang }: { lang: Lang }) {
+  const t = lang === 'ko';
   const [selected, setSelected] = useState<string | null>(null);
+  const { state } = useMissions();
+  const unlocked = allMissionsCompleted(state);
+  const completedCount = MISSIONS.filter((m) => state[m.id]).length;
+
+  if (!unlocked) {
+    return (
+      <div className="rounded-xl border border-border p-8 text-center">
+        <p className="text-3xl mb-3">🔒</p>
+        <p className="font-semibold text-fg mb-1">
+          {t ? '모든 미션을 완료하면 사진첩이 열립니다' : 'Complete every mission to unlock the photo album'}
+        </p>
+        <p className="text-sm text-muted">
+          {t
+            ? `현재 ${completedCount} / ${MISSIONS.length}개 완료 — 풋터의 미션 페이지에서 확인할 수 있어요.`
+            : `${completedCount} / ${MISSIONS.length} completed — check the mission page linked in the footer.`}
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div>
-      <div className="columns-2 sm:columns-3 gap-2 space-y-2">
-        {PHOTOS.map((filename) => {
-          const encodedName = encodeURIComponent(filename);
-          return (
-            <button
-              key={filename}
-              className="w-full block overflow-hidden rounded-lg cursor-zoom-in focus:outline-none"
-              onClick={() => setSelected(filename)}
-              aria-label={filename}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={`/photos/${encodedName}`}
-                alt={filename}
-                className="w-full h-auto object-cover hover:scale-105 transition-transform duration-300"
-                loading="lazy"
-              />
-            </button>
-          );
-        })}
+      <div className="grid grid-cols-3 gap-1 sm:gap-2">
+        {PHOTOS.map((filename) => (
+          <PhotoGridItem key={filename} filename={filename} onSelect={setSelected} />
+        ))}
       </div>
 
       {/* Lightbox */}
@@ -849,7 +889,7 @@ export default function AboutTabs({ lang }: Props) {
       {/* Tab content */}
       {active === 'resume' && <ResumeTab lang={lang} />}
       {active === 'ad' && <AdTab lang={lang} />}
-      {active === 'photo' && <PhotoTab />}
+      {active === 'photo' && <PhotoTab lang={lang} />}
     </div>
   );
 }

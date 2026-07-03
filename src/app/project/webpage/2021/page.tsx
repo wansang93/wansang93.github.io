@@ -10,11 +10,11 @@ export default function Webpage2021() {
           <Link href="/project/" className="hover:text-fg">
             프로젝트
           </Link>{' '}
-          /{' '}
+          {'>'}{' '}
           <Link href="/project/webpage/" className="hover:text-fg">
             웹페이지
           </Link>{' '}
-          / 2021
+          {'>'} 2021
         </p>
         <h1 className="mt-2 font-serif text-4xl font-semibold tracking-tight">
           첫번째 홈페이지 제작

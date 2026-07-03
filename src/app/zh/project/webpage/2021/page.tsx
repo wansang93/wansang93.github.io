@@ -10,11 +10,11 @@ export default function Webpage2021Zh() {
           <Link href="/zh/project/" className="hover:text-fg">
             项目
           </Link>{' '}
-          /{' '}
+          {'>'}{' '}
           <Link href="/zh/project/webpage/" className="hover:text-fg">
             网页
           </Link>{' '}
-          / 2021
+          {'>'} 2021
         </p>
         <h1 className="mt-2 font-serif text-4xl font-semibold tracking-tight">
           我的第一个个人主页

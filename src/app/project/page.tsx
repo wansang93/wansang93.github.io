@@ -6,7 +6,12 @@ const categories = [
   {
     slug: 'webpage',
     title: '웹페이지',
-    description: '매년 리빌드한 개인 사이트 버전 아카이브',
+    description: '웹페이지 프로젝트 모음',
+  },
+  {
+    slug: 'dashboard',
+    title: '데이터/대시보드',
+    description: '데이터 분석 및 대시보드 프로젝트',
   },
 ];
 
@@ -24,10 +29,10 @@ export default function ProjectIndex() {
           <li key={c.slug}>
             <Link
               href={`/project/${c.slug}/`}
-              className="block rounded-lg border border-border p-5 hover:border-accent hover:bg-border/20 transition-colors"
+              className="flex items-baseline gap-3 rounded-lg border border-border px-5 py-4 hover:border-accent hover:bg-border/20 transition-colors"
             >
-              <div className="font-serif text-xl font-semibold">{c.title}</div>
-              <p className="mt-1 text-sm text-muted">{c.description}</p>
+              <span className="font-serif text-xl font-semibold shrink-0">{c.title}</span>
+              <span className="text-sm text-muted truncate">{c.description}</span>
             </Link>
           </li>
         ))}

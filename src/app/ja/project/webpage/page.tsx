@@ -5,8 +5,8 @@ export const metadata = { title: 'プロジェクト — ウェブページ' };
 const versions = [
   {
     year: '2021',
-    title: 'はじめてのホームページ',
-    description: '最初のバージョン。Start Bootstrap Freelancer テーマをベースにしたシングルページのポートフォリオ。',
+    title: '2021 ポートフォリオ',
+    description: '初めての個人ポートフォリオサイト。Bootstrap Freelancer テーマをベースに 2021 年 1 月制作。',
     href: '/ja/project/webpage/2021/',
   },
 ];
@@ -19,10 +19,10 @@ export default function WebpageIndexJa() {
           <Link href="/ja/project/" className="hover:text-fg">
             プロジェクト
           </Link>{' '}
-          / ウェブページ
+          {'>'} ウェブページ
         </p>
         <h1 className="mt-2 font-serif text-4xl font-semibold tracking-tight">ウェブページ</h1>
-        <p className="mt-3 text-muted">毎年作り直した個人サイトをバージョンごとにアーカイブ。</p>
+        <p className="mt-3 text-muted">ウェブページプロジェクト一覧。</p>
       </header>
 
       <ul className="space-y-3">
