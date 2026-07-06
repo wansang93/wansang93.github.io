@@ -12,6 +12,34 @@ export type PatchNote = {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: 'v0.010',
+    date: '2026.07.06',
+    title: {
+      ko: '블로그 목록 정리',
+      en: 'Cleaner blog listing',
+      zh: '博客列表整理',
+      ja: 'ブログ一覧の整理',
+    },
+    details: {
+      ko: [
+        '블로그 목록의 항목마다 있던 박스 테두리를 없애고, 카테고리 사이는 얇은 구분선으로 정리해 더 깔끔해졌어요',
+        '항목에 마우스를 올리면 이름이 포인트 색으로 바뀌고, 새 창으로 열린다는 걸 알려주는 작은 아이콘이 함께 표시돼요',
+      ],
+      en: [
+        'Removed the boxed borders around each blog entry and replaced category gaps with thin dividers for a cleaner look',
+        'Hovering an entry now highlights its name in the accent color and shows a small icon indicating it opens in a new tab',
+      ],
+      zh: [
+        '去掉了博客列表每一项的边框，改用细分隔线区分类别，看起来更清爽',
+        '鼠标悬停在条目上时，名称会变为强调色，并显示一个表示将在新标签页打开的小图标',
+      ],
+      ja: [
+        'ブログ一覧の各項目にあった枠線をなくし、カテゴリー間は細い区切り線で整理してすっきりさせました',
+        '項目にマウスを乗せると名前がアクセントカラーに変わり、新しいタブで開くことを示す小さなアイコンが表示されます',
+      ],
+    },
+  },
+  {
     version: 'v0.009',
     date: '2026.07.03',
     title: {
