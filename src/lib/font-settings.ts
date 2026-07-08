@@ -47,7 +47,12 @@ export function useFont() {
   const [font, setFontState] = useState<FontId>('pretendard');
 
   useEffect(() => {
-    setFontState(getFont());
+    function sync() {
+      setFontState(getFont());
+    }
+    sync();
+    window.addEventListener('font-changed', sync);
+    return () => window.removeEventListener('font-changed', sync);
   }, []);
 
   function setFont(id: FontId) {

@@ -1,6 +1,7 @@
 import { LANGS, type Lang } from './i18n';
 import { MISSIONS } from './missions';
 import { PATCH_NOTES } from './patch-notes';
+import { STUDY_CATEGORIES } from './study-archive';
 
 type Localized = { ko: string; en: string; zh: string; ja: string };
 
@@ -36,6 +37,13 @@ const patchBody: Localized = joinByLang((l) =>
   ).join(' '),
 );
 
+const studyBody: Localized = joinByLang((l) =>
+  STUDY_CATEGORIES.map(
+    (c) =>
+      `${c.title[l]} ${c.description[l]} ${c.repos.map((r) => `${r.name} ${r.description[l]}`).join(' ')}`,
+  ).join(' '),
+);
+
 export const SEARCH_ITEMS: SearchItem[] = [
   {
     href: '/',
@@ -50,12 +58,13 @@ export const SEARCH_ITEMS: SearchItem[] = [
   {
     href: '/blog/',
     title: { ko: '블로그', en: 'Blog', zh: '博客', ja: 'ブログ' },
-    body: {
-      ko: '블로그. 짧은 기술 노트와 생각을 기록합니다. 첫 글을 준비하고 있어요. MDX 기반의 글 시스템이 곧 추가됩니다. 그 사이에 미션을 모아 보는 건 어떨까요?',
-      en: 'Blog. The blog system is in progress. In the next step, adding MDX files under content/blog/ will automatically generate the index and post pages.',
-      zh: '博客。博客系统正在开发中。下一步,在 content/blog/ 目录下添加 MDX 文件,即可自动生成索引和文章页面。',
-      ja: 'ブログ。ブログシステムは準備中です。次のステップで content/blog/ 配下に MDX ファイルを追加すると、一覧と各記事のページが自動で生成されます。',
+    description: {
+      ko: 'GitHub에 정리해 온 학습 기록 모음',
+      en: 'A collection of study logs kept on GitHub',
+      zh: '在 GitHub 上整理的学习记录合集',
+      ja: 'GitHub にまとめてきた学習記録集',
     },
+    body: studyBody,
   },
   {
     href: '/about/',

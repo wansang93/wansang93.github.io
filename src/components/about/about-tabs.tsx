@@ -151,7 +151,7 @@ function CareerTimeline({ lang, onScrolled }: { lang: Lang; onScrolled?: () => v
     { label: t ? '홍익대학교'         : 'Hongik Univ.',       start: '2012-03-01', end: '2019-02-01', color: CC.school,   upper: true,  type: 'school'   as const, ds: '2012-03-02', de: '2019-02-22', di: true  },
     { label: t ? '빅데이터AI'        : 'BigData AI',          start: '2019-04-01', end: '2019-12-01', color: CC.training, upper: true,  type: 'training' as const, ds: '2019-04-22', de: '2019-11-27', di: true  },
     { label: t ? '클라우드MSA'        : 'Cloud MSA',          start: '2020-12-01', end: '2021-07-01', color: CC.training, upper: true,  type: 'training' as const, ds: '2020-12-28', de: '2021-06-04', di: true  },
-    { label: 'SSAFY',                                          start: '2022-01-01', end: '2022-08-01', color: CC.training, upper: true,  type: 'training' as const, ds: '2022-01-05', de: '2022-07-14', di: true  },
+    { label: 'SSAFY',                                          start: '2022-01-01', end: '2022-07-01', color: CC.training, upper: true,  type: 'training' as const, ds: '2022-01-05', de: '2022-07-14', di: true  },
     { label: t ? '군대'               : 'Military',           start: '2014-04-01', end: '2016-01-01', color: CC.military, upper: false, type: 'military' as const, ds: '2014-04-01', de: '2016-01-01', di: false },
     { label: t ? '호주 워킹홀리데이' : 'AU Working Holiday', start: '2017-03-01', end: '2018-02-20', color: CC.abroad,   upper: false, type: 'abroad'   as const, ds: '2017-03-01', de: '2018-02-01', di: false },
     { label: t ? '호주여행'           : 'AU Trip',            start: '2019-01-01', end: '2019-03-27', color: CC.abroad,   upper: false, type: 'abroad'   as const, ds: '2019-01-27', de: '2019-03-26', di: true  },
@@ -770,12 +770,32 @@ function PhotoGridItem({ filename, onSelect }: { filename: string; onSelect: (fi
   );
 }
 
+const PHOTO_BATCH_SIZE = 30;
+
 function PhotoTab({ lang }: { lang: Lang }) {
   const t = lang === 'ko';
   const [selected, setSelected] = useState<string | null>(null);
+  const [visibleCount, setVisibleCount] = useState(PHOTO_BATCH_SIZE);
+  const sentinelRef = useRef<HTMLDivElement>(null);
   const { state } = useMissions();
   const unlocked = allMissionsCompleted(state);
   const completedCount = MISSIONS.filter((m) => state[m.id]).length;
+
+  useEffect(() => {
+    if (!unlocked) return;
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setVisibleCount((v) => Math.min(v + PHOTO_BATCH_SIZE, PHOTOS.length));
+        }
+      },
+      { rootMargin: '600px' }
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [unlocked]);
 
   if (!unlocked) {
     return (
@@ -793,13 +813,21 @@ function PhotoTab({ lang }: { lang: Lang }) {
     );
   }
 
+  const visiblePhotos = PHOTOS.slice(0, visibleCount);
+
   return (
     <div>
-      <div className="grid grid-cols-3 gap-1 sm:gap-2">
-        {PHOTOS.map((filename) => (
+      <div className="grid gap-1 sm:gap-2 grid-cols-3 min-[1384px]:grid-cols-4 min-[1730px]:grid-cols-5 min-[2076px]:grid-cols-6">
+        {visiblePhotos.map((filename) => (
           <PhotoGridItem key={filename} filename={filename} onSelect={setSelected} />
         ))}
       </div>
+
+      {visibleCount < PHOTOS.length && (
+        <div ref={sentinelRef} className="py-6 text-center text-xs text-muted">
+          {t ? '사진을 더 불러오는 중...' : 'Loading more photos...'}
+        </div>
+      )}
 
       {/* Lightbox */}
       {selected && (

@@ -68,43 +68,55 @@ export function getStoredAccent(): { light: string; dark: string } | null {
   return null;
 }
 
+export function resetAccent() {
+  try {
+    localStorage.removeItem('accent-light');
+    localStorage.removeItem('accent-dark');
+  } catch {}
+  document.documentElement.style.removeProperty('--accent-light');
+  document.documentElement.style.removeProperty('--accent-dark');
+  window.dispatchEvent(new CustomEvent('accent-changed'));
+}
+
+function initialAccentState(): { light: string; dark: string; presetId: AccentPresetId } {
+  const stored = getStoredAccent();
+  if (!stored) return { light: '#ea580c', dark: '#fb923c', presetId: 'orange' };
+  const match = ACCENT_PRESETS.find((p) => p.light === stored.light && p.dark === stored.dark);
+  return { light: stored.light, dark: stored.dark, presetId: match?.id ?? 'custom' };
+}
+
+const DEFAULT_ACCENT_STATE: { light: string; dark: string; presetId: AccentPresetId } = {
+  light: '#ea580c',
+  dark: '#fb923c',
+  presetId: 'orange',
+};
+
 export function useAccent() {
-  const [light, setLight] = useState('#ea580c');
-  const [dark, setDark] = useState('#fb923c');
-  const [presetId, setPresetId] = useState<AccentPresetId>('orange');
+  const [{ light, dark, presetId }, setState] = useState(DEFAULT_ACCENT_STATE);
 
   useEffect(() => {
-    const stored = getStoredAccent();
-    if (stored) {
-      setLight(stored.light);
-      setDark(stored.dark);
-      const match = ACCENT_PRESETS.find(
-        (p) => p.light === stored.light && p.dark === stored.dark,
-      );
-      setPresetId(match?.id ?? 'custom');
+    function sync() {
+      setState(initialAccentState());
     }
+    sync();
+    window.addEventListener('accent-changed', sync);
+    return () => window.removeEventListener('accent-changed', sync);
   }, []);
 
   function selectPreset(id: Exclude<AccentPresetId, 'random' | 'custom'>) {
     const preset = ACCENT_PRESETS.find((p) => p.id === id)!;
-    setLight(preset.light);
-    setDark(preset.dark);
-    setPresetId(id);
+    setState({ light: preset.light, dark: preset.dark, presetId: id });
     saveAccent(preset.light, preset.dark);
   }
 
   function selectRandom() {
     const pair = randomAccentPair();
-    setLight(pair.light);
-    setDark(pair.dark);
-    setPresetId('random');
+    setState({ light: pair.light, dark: pair.dark, presetId: 'random' });
     saveAccent(pair.light, pair.dark);
   }
 
   function selectCustom(hex: string) {
-    setLight(hex);
-    setDark(hex);
-    setPresetId('custom');
+    setState({ light: hex, dark: hex, presetId: 'custom' });
     saveAccent(hex, hex);
   }
 

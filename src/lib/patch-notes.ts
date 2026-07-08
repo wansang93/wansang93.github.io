@@ -12,6 +12,50 @@ export type PatchNote = {
 
 export const PATCH_NOTES: PatchNote[] = [
   {
+    version: 'v0.011',
+    date: '2026.07.08',
+    title: {
+      ko: '설정 초기화 버튼 + 사진첩 개선',
+      en: 'Reset settings button + photo album improvements',
+      zh: '新增恢复默认设置按钮 + 相册优化',
+      ja: '設定リセットボタン + 写真集の改善',
+    },
+    details: {
+      ko: [
+        '설정 페이지에 "기본값으로 설정" 버튼이 생겨서 글꼴과 강조색을 한 번에 원래대로 되돌릴 수 있어요',
+        '설정을 바꾸면 같은 화면의 다른 부분에도 바로 반영되도록 고쳤어요',
+        '사진이 많아져서 사진첩을 스크롤하면 자동으로 더 불러오도록 바꿨어요 (한 번에 다 불러오지 않아 더 빨라졌어요)',
+        '화면이 넓을수록 사진첩 grid가 4~6열까지 늘어나서 큰 모니터에서도 사진을 시원하게 볼 수 있어요',
+        '소개 페이지 경력 그래프에서 SSAFY 교육 기간이 실제보다 한 달 길게 표시되던 걸 바로잡았어요',
+        '블로그 검색 결과가 실제 카테고리 내용을 반영하도록 업데이트됐어요',
+      ],
+      en: [
+        'Added a "Reset to default" button on the Settings page to restore the font and accent color in one click',
+        'Changing a setting now updates other parts of the same page immediately',
+        'The photo album now loads more photos automatically as you scroll instead of loading everything at once, making it faster',
+        'The photo grid now expands up to 6 columns on wider screens for a better view on large monitors',
+        'Fixed the SSAFY training period on the About page career graph showing one month longer than it actually was',
+        'Blog search results now reflect the actual category content',
+      ],
+      zh: [
+        '设置页面新增"恢复默认设置"按钮，可一键还原字体和强调色',
+        '修改设置后，同一页面的其他部分会立即同步更新',
+        '相册现在会在滚动时自动加载更多照片，而不是一次性全部加载，速度更快了',
+        '屏幕越宽，相册网格最多可扩展到 6 列，大屏显示效果更好',
+        '修复了关于页面履历图表中 SSAFY 培训期间显示比实际多一个月的问题',
+        '博客搜索结果现在会反映实际的分类内容',
+      ],
+      ja: [
+        '設定ページに「デフォルトに戻す」ボタンを追加し、フォントとアクセントカラーを一括で元に戻せます',
+        '設定を変更すると同じ画面の他の部分にもすぐ反映されるようになりました',
+        '写真集はスクロールすると自動で追加読み込みされるようになり、一度に全部読み込まないため速くなりました',
+        '画面が広いほど写真集のグリッドが最大6列まで広がり、大きなモニターでも見やすくなりました',
+        '自己紹介ページの経歴グラフで、SSAFY研修期間が実際より1か月長く表示されていた問題を修正しました',
+        'ブログの検索結果が実際のカテゴリー内容を反映するようになりました',
+      ],
+    },
+  },
+  {
     version: 'v0.010',
     date: '2026.07.06',
     title: {
